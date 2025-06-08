@@ -1,6 +1,15 @@
 // src/components/WordChip.tsx
 import React, { DragEvent } from 'react';
-import cx from 'classnames';
+const cx = (...classes: Array<string | Record<string, boolean>>) => {
+  return classes
+    .flatMap(c => {
+      if (typeof c === 'string') return c;
+      return Object.entries(c)
+        .filter(([, cond]) => cond)
+        .map(([cls]) => cls);
+    })
+    .join(' ');
+};
 
 interface WordChipProps {
   word: string;

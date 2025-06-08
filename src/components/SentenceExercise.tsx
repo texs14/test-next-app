@@ -205,7 +205,7 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
 
   const dropZoneRef = useRef<HTMLDivElement>(null);
 
-  const handleChipDragStart = useCallback((_item: DragItem) => {
+  const handleChipDragStart = useCallback(() => {
     /* no-op */
   }, []);
 
@@ -275,7 +275,6 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
     // Разбиваем тайский текст на слова
     const segmenter = new (Intl as any).Segmenter('th', { granularity: 'word' });
     const segments = Array.from(segmenter.segment(sentence.text))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((seg: any) => seg.segment.trim())
       .filter((w: string) => w.length > 0);
 
