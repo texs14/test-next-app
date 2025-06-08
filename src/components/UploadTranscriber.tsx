@@ -34,7 +34,7 @@ export default function UploadTranscriber({
       push(`🚀 Uploading “${file.name}” to server…`);
       const upFD = new FormData();
       upFD.append('video', file);
-      const upRes = await fetch('http://localhost:4000/api/upload', {
+      const upRes = await fetch('/api/upload', {
         method: 'POST',
         body: upFD,
       });
@@ -50,7 +50,7 @@ export default function UploadTranscriber({
       trFD.append('targetLangs', JSON.stringify(targetLangs));
       trFD.append('difficulty', difficulty);
       trFD.append('tags', JSON.stringify(tags));
-      const trRes = await fetch('http://localhost:4000/api/transcribe', {
+      const trRes = await fetch('/api/transcribe', {
         method: 'POST',
         body: trFD,
       });
