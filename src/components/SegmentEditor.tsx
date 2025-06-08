@@ -15,6 +15,12 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
   const origRef = useRef<Segment[]>([]);
   const arrRef = useRef<Segment[]>([]);
   const isInitial = useRef(true);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
 
   useEffect(() => {
     arrRef.current = arr;
@@ -39,8 +45,9 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
       isInitial.current = false;
       return;
     }
-    onChange(arr);
-  }, [arr, onChange]);
+    onChangeRef.current(arr);
+  }, [arr]);
+
 
   // Сегментируем текст на слова через Intl.Segmenter
   const segmentWords = (text: string): Word[] => {
