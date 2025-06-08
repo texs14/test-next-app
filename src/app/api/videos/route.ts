@@ -1,29 +1,20 @@
 import { NextResponse } from 'next/server'
-import { Storage } from '@google-cloud/storage'
-
-const projectId = process.env.GOOGLE_PROJECT_ID as string;
-const clientEmail = process.env.GOOGLE_CLIENT_EMAIL as string;
-const rawKey = process.env.GOOGLE_PRIVATE_KEY as string;
-
-const privateKey = rawKey?.replace(/\\n/g, '\n');
-
-const storage = new Storage({
-  projectId,
-  credentials: { client_email: clientEmail, private_key: privateKey },
-});
-const bucket = storage.bucket('my-test-app-bucket')
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '@/app/firebase'
 
 export async function GET() {
   try {
-    console.log('GET', bucket)
-    const [files] = await bucket.getFiles({ prefix: 'videos/' })
-    const data = files.map((f) => ({
-      videoId: f.name.split('/')[1]?.split('.')[0] ?? '',
-      name: f.metadata.name as string,
-      size: Number(f.metadata.size),
-      updated: f.metadata.updated as string,
-      videoUrl: `https://storage.googleapis.com/${bucket.name}/${f.name}`,
-    }))
+    const snap = await getDocs(collection(db, 'videos'))
+    const data = snap.docs.map(doc => {
+      const d = doc.data() as any
+      return {
+        videoId: doc.id,
+        name: d.name as string,
+        size: d.size as number,
+        updated: d.updated ? d.updated.toDate().toISOString() : null,
+        videoUrl: (d.previewSrc as string) || (d.src as string),
+      }
+    })
     return NextResponse.json(data)
   } catch (e: unknown) {
     console.error(e)
