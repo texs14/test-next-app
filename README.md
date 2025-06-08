@@ -18,6 +18,17 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## Configuration
+
+Firebase Authentication is used for login and registration. Copy `.env.example` to `.env.local` and provide your Firebase project settings:
+
+```
+cp .env.example .env.local
+# edit .env.local with your values
+```
+
+Make sure Email/Password authentication is enabled in your Firebase console under **Authentication** → **Sign-in method**.
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
