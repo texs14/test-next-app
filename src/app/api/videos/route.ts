@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
-import { getAdminFirestore } from '@/lib/firebaseAdmin'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '@/app/firebase'
 
 export async function GET() {
   try {
-    const db = getAdminFirestore()
-    const snap = await db.collection('videos').get()
+    const snap = await getDocs(collection(db, 'videos'))
+
     const data = snap.docs.map(doc => {
       const d = doc.data() as any
       return {
