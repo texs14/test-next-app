@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import VideoPlayer from '@/components/VideoPlayer/VideoPlayer'
 import { doc, getDoc } from 'firebase/firestore'
-import { db } from '../../firebase'
+import { db } from '@/app/firebase'
 import type { VideoDoc } from '@/types/index.types'
 
 export default function VideoViewPage() {

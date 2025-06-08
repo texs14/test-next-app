@@ -1,8 +1,8 @@
 // src/components/VideoPlayer/VideoPlayer.tsx
-import { useRef, useState, useEffect, PointerEvent as PE, ChangeEvent, MouseEvent } from 'react';
-import type { Segment, SubtitleData, Word } from '../../types';
+import { useRef, useState, useEffect, PointerEvent as PE, ChangeEvent } from 'react';
+import type { Segment, SubtitleData, Word } from '@/types/index.types';
 import type { Language } from '../LanguageMetaForm';
-import { useTooltipContext } from '../../contexts/TooltipContext';
+// import { useTooltipContext } from '../../contexts/TooltipContext';
 
 export type VideoDoc = {
   src: string; // URL или blob-URL
@@ -34,7 +34,7 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(1);
 
-  const { showTooltip } = useTooltipContext();
+  // const { showTooltip } = useTooltipContext();
 
   // Используем готовые сегменты напрямую
   const sentenceSubs = subtitles;
@@ -60,6 +60,7 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
   const togglePlay = () => {
     const v = videoRef.current;
     if (!v) return;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     isPlaying ? v.pause() : v.play();
     setIsPlaying(!isPlaying);
   };
@@ -126,6 +127,8 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
     if (!segsArr.length) return;
 
     // Найти индекс текущего сегмента
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     let idx = segsArr.findIndex((s, i) => {
       const start = s.start;
       const next = segsArr[i + 1]?.start ?? Infinity;
@@ -178,7 +181,7 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
             <span
               data-interactive="true"
               key={i}
-              onClick={(e: MouseEvent<HTMLSpanElement>) => showTooltip(w.word, e, originalLang)}
+              // onClick={(e: MouseEvent<HTMLSpanElement>) => showTooltip(w.word, e, originalLang)}
               className={`text-white cursor-pointer hover:text-blue-300 ${w.word === ' ' ? 'mr-3' : ''}`}
             >
               {w.word}
@@ -200,7 +203,7 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
   console.log('src', src);
 
   return (
-    <div className="relative w-full text-gray-800 select-none">
+    <div className="relative w-[50%] text-gray-800 select-none">
       <video
         ref={videoRef}
         src={src}
@@ -269,31 +272,31 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
   );
 }
 
-const exercise = {
-  name: 'Базовая граматика',
-  originalLang: 'th',
-  difficulty: 'beginner',
-  tags: ['grammar', 'vocabulary'],
-  sentences: [
-    {
-      text: 'นี่คือข้อเสนอการทดสอบสำหรับการตรวจสอบ',
-      rightAnswers: ['นี่คือข้อเสนอการทดสอบสำหรับการตรวจสอบ'],
-      translations: {
-        ru: 'Это тестовое предложение для проверки',
-        en: 'This is a test offer for verification',
-      },
-      note: {
-        en: 'We check how it will all be displayed and look like',
-        ru: 'Проверяем как это всё будет выводиться и выглядеть',
-      },
-    },
-    {
-      text: 'นี้เป็นคำแนะนำการทดสอบต่อไปที่จะตรวจสอบ',
-      translations: {
-        ru: 'Это следующее тестовое предложение для проверки',
-        en: 'This is the next test suggestion to check.',
-      },
-      note: null,
-    },
-  ],
-};
+// const exercise = {
+//   name: 'Базовая граматика',
+//   originalLang: 'th',
+//   difficulty: 'beginner',
+//   tags: ['grammar', 'vocabulary'],
+//   sentences: [
+//     {
+//       text: 'นี่คือข้อเสนอการทดสอบสำหรับการตรวจสอบ',
+//       rightAnswers: ['นี่คือข้อเสนอการทดสอบสำหรับการตรวจสอบ'],
+//       translations: {
+//         ru: 'Это тестовое предложение для проверки',
+//         en: 'This is a test offer for verification',
+//       },
+//       note: {
+//         en: 'We check how it will all be displayed and look like',
+//         ru: 'Проверяем как это всё будет выводиться и выглядеть',
+//       },
+//     },
+//     {
+//       text: 'นี้เป็นคำแนะนำการทดสอบต่อไปที่จะตรวจสอบ',
+//       translations: {
+//         ru: 'Это следующее тестовое предложение для проверки',
+//         en: 'This is the next test suggestion to check.',
+//       },
+//       note: null,
+//     },
+//   ],
+// };

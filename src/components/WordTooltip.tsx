@@ -1,6 +1,6 @@
 // src/components/WordTooltip.tsx
 import React, { useEffect, useState, useRef } from 'react';
-import type { Language } from './LanguageMetaForm';
+// import type { Language } from '@/types/index.types';
 import { useTooltipContext } from '../contexts/TooltipContext';
 
 interface WordInfo {
