@@ -153,7 +153,8 @@ export default function VideoEditor() {
   }
 
   return (
-    <div className="p-4 space-y-8">
+    <div className="p-4 space-y-8 ">
+      <div className='w-full max-w-4xl flex flex-col items-center justify-center gap-[16px]'>
       <LanguageMetaForm
         {...meta}
         onChange={async fields => {
@@ -164,7 +165,7 @@ export default function VideoEditor() {
             return { ...prev, targetLangs: fields.targetLangs ?? [] }
           })
         }}
-      />
+        />
 
       <UploadTranscriber
         originalLang={meta.originalLang}
@@ -177,6 +178,7 @@ export default function VideoEditor() {
         onComplete={handleUploadComplete}
         disabled={!!videoId}
       />
+        </div>
 
       {videoDoc && editedSubs && !loadingDoc && (
         <>

@@ -203,7 +203,7 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
   console.log('src', src);
 
   return (
-    <div className="relative w-[50%] text-gray-800 select-none">
+    <div className="relative w-full text-gray-800 select-none">
       <video
         ref={videoRef}
         src={src}
