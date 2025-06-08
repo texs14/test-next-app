@@ -21,12 +21,14 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
     onChangeRef.current = onChange;
   }, [onChange]);
 
+
   useEffect(() => {
     arrRef.current = arr;
   }, [arr]);
 
   const segmentsEqual = (a: Segment[], b: Segment[]) =>
     JSON.stringify(a) === JSON.stringify(b);
+
 
   useEffect(() => {
     const sorted = [...segments]
@@ -45,6 +47,7 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
     }
     onChangeRef.current(arr);
   }, [arr]);
+
 
   // Сегментируем текст на слова через Intl.Segmenter
   const segmentWords = (text: string): Word[] => {
