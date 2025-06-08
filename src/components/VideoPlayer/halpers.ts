@@ -1,5 +1,5 @@
 // src/helpers/buildSentenceSegments.ts
-import { Segment, SubtitleData, Word } from '../../types';
+import { Segment, SubtitleData, Word } from '../../types/index.types';
 
 const sentenceEnd = /[.!?…]+$/;
 const thaiChar = /[\u0E00-\u0E7F]/;
@@ -73,5 +73,5 @@ export function buildSentenceSegments(src: SubtitleData): SubtitleData {
     }
   });
 
-  return { segments: sentenceSegs };
+  return { translation: null, segments: sentenceSegs };
 }

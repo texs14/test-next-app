@@ -84,7 +84,7 @@ export async function POST(req: Request) {
     const gcsUri = `gs://${bucket.name}/${wavKey}`
     await Promise.all([fs.unlink(inPath), fs.unlink(outPath)])
 
-    const speechConfig = {
+    const speechConfig: any = {
       encoding: 'LINEAR16',
       sampleRateHertz: 16000,
       languageCode:
@@ -95,10 +95,10 @@ export async function POST(req: Request) {
       enableWordTimeOffsets: true,
       enableAutomaticPunctuation: true,
     }
-    const [operation] = await speech.longRunningRecognize({
+    const [operation] = await (speech.longRunningRecognize({
       config: speechConfig,
       audio: { uri: gcsUri },
-    })
+    }) as any)
     const [speechResp] = await operation.promise()
 
     const segments = (speechResp.results || []).map((r, idx) => {

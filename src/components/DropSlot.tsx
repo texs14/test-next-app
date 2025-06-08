@@ -1,10 +1,10 @@
 // src/components/DropSlot.tsx
 import React, { DragEvent, useCallback } from 'react';
-import cx from 'classnames';
+const cx = (...classes: Array<string | undefined | false>) =>
+  classes.filter(Boolean).join(' ');
 
 interface DropSlotProps {
   slotIndex: number;
-  placedWordIndex: number | null; // индекс из массива слов, или null
   placedWordText: string;
   onDropWord: (slotIdx: number, wordIdx: number) => void;
   isCorrect?: boolean; // для подсветки: true / false / undefined
@@ -12,7 +12,6 @@ interface DropSlotProps {
 
 export const DropSlot: React.FC<DropSlotProps> = ({
   slotIndex,
-  placedWordIndex,
   placedWordText,
   onDropWord,
   isCorrect,

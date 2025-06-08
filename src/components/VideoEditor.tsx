@@ -113,7 +113,7 @@ export default function VideoEditor() {
           const tr = trSegments.find((t: any) => t.id === s.id)
           return tr ? { ...s, translations: tr.translations } : s
         })
-        return { segments: merged }
+        return { ...prev, segments: merged }
       })
     } catch (e: any) {
       alert('Ошибка перевода: ' + e.message)
@@ -157,8 +157,8 @@ export default function VideoEditor() {
       <div className='w-full max-w-4xl flex flex-col items-center justify-center gap-[16px]'>
       <LanguageMetaForm
         {...meta}
-        onChange={async fields => {
-          await setMeta(prev => ({ ...prev, ...fields }))
+        onChange={fields => {
+          setMeta(prev => ({ ...prev, ...(fields as any) }))
           if (!videoDoc) return
           setVideoDoc(prev => {
             if (!prev) return prev

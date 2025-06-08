@@ -51,7 +51,7 @@ export function LanguageMetaForm({ originalLang, targetLangs, difficulty, tags, 
                 type="checkbox"
                 value={opt.value}
                 checked={targetLangs.includes(opt.value as Language)}
-                onChange={e => {
+                onChange={() => {
                   const v = opt.value as Language;
                   const arr = targetLangs.includes(v)
                     ? targetLangs.filter(x => x !== v)

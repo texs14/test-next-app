@@ -1,5 +1,5 @@
 // src/components/WordTooltip.tsx
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 // import type { Language } from '@/types/index.types';
 import { useTooltipContext } from '../contexts/TooltipContext';
 
@@ -17,7 +17,10 @@ export function WordTooltip() {
 
   // Если тултип не видим или отсутствует — оставить хуки на месте, но рендерить null
   const word = tooltip?.word || '';
-  const coords = tooltip?.coords || { x: 0, yAbove: 0, yBelow: 0 };
+  const coords = useMemo(
+    () => tooltip?.coords || { x: 0, yAbove: 0, yBelow: 0 },
+    [tooltip],
+  );
   const originalLang = tooltip?.originalLang || 'en';
 
   useEffect(() => {

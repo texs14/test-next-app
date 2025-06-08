@@ -1,6 +1,6 @@
 // src/components/SegmentEditor.tsx
 import { useState, useEffect, useRef } from 'react';
-import type { Segment, Word } from '../types';
+import type { Segment, Word } from '../types/index.types';
 import { Language } from './LanguageMetaForm';
 
 interface Props {
@@ -53,8 +53,9 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
   const segmentWords = (text: string): Word[] => {
     try {
       // TODO временное решение для разбивки на слова на тайском
-      // @ts-ignore
-      const seg = new Intl.Segmenter(originalLang, { granularity: 'word' });
+      const seg = new (Intl as any).Segmenter(originalLang, {
+        granularity: 'word',
+      });
       const wordsArr: Word[] = [];
       for (const { segment } of seg.segment(text)) {
         if (!segment.trim()) continue;

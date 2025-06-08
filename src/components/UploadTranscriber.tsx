@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import type { SubtitleData } from '../types';
+import type { SubtitleData } from '../types/index.types';
 
 interface Props {
   originalLang: string;

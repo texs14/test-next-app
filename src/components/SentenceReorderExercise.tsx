@@ -29,7 +29,6 @@ interface SentenceReorderExerciseProps {
 
 export default function SentenceReorderExercise({ data }: SentenceReorderExerciseProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [tokens, setTokens] = useState<TokenState[]>([]);
   const [shuffledTokens, setShuffledTokens] = useState<TokenState[]>([]);
   const [dropZone, setDropZone] = useState<TokenState[]>([]);
   const [feedback, setFeedback] = useState<{ id: string; correct: boolean }[] | null>(null);
@@ -45,7 +44,6 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
       text: tok,
     }));
 
-    setTokens(keyed);
     // Shuffle (Fisher–Yates)
     const copy = [...keyed];
     for (let i = copy.length - 1; i > 0; i--) {
@@ -56,7 +54,7 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
     // Reset drop area & feedback
     setDropZone([]);
     setFeedback(null);
-  }, [currentIndex]);
+  }, [currentIndex, data.sentences]);
 
   // When user drags a token out of shuffledTokens → dropZone
   const onDragStart = (
@@ -188,7 +186,7 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
           onDragOver={onDragOver}
           onDrop={onDropToDropZone}
         >
-          {dropZone.map((tok, idx) => {
+          {dropZone.map(tok => {
             const fb = feedback?.find(fb => fb.id === tok.id);
             const isRight = fb?.correct === true;
             const isWrong = fb?.correct === false;
