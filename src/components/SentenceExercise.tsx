@@ -1,4 +1,5 @@
 // src/components/exercises/SentenceExercise.tsx
+import Image from 'next/image';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useDrag, useDrop, useDragLayer } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
@@ -274,6 +275,7 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
     // Разбиваем тайский текст на слова
     const segmenter = new (Intl as any).Segmenter('th', { granularity: 'word' });
     const segments = Array.from(segmenter.segment(sentence.text))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((seg: any) => seg.segment.trim())
       .filter((w: string) => w.length > 0);
 
@@ -332,7 +334,7 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
           <h3 className="mb-2 text-lg font-semibold">Задание {index + 1}</h3>
           {sentence.note && sentence.note.ru && (
             <div className="p-5 bg-gray-100 rounded-[20px] flex items-center ">
-              <img src="/images/note.png" className="inline mr-2" alt="thai" />
+              <Image src="/note.png" className="inline mr-2" alt="thai" width={30} height={35} />
               <p>{sentence.note.ru}</p>
             </div>
           )}
