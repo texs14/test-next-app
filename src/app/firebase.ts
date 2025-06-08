@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app'
+import { getApps, initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
@@ -16,7 +16,11 @@ if (!firebaseConfig.apiKey) {
   console.warn('Firebase config is missing. Check your environment variables.')
 }
 
-export const app = initializeApp(firebaseConfig)
+// Если ещё нет инициализированных приложений — создаём, иначе берём первый
+const app = !getApps().length
+  ? initializeApp(firebaseConfig)
+  : getApps()[0]
+  
 export const auth = getAuth(app)
 export const db = getFirestore(app)
 export const storage = getStorage(app)
