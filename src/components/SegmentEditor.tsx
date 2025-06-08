@@ -13,13 +13,24 @@ interface Props {
 export function SegmentEditor({ segments, originalLang, targetLangs, onChange }: Props) {
   const [arr, setArr] = useState<Segment[]>([]);
   const origRef = useRef<Segment[]>([]);
+  const arrRef = useRef<Segment[]>([]);
   const isInitial = useRef(true);
+
+  useEffect(() => {
+    arrRef.current = arr;
+  }, [arr]);
+
+  const segmentsEqual = (a: Segment[], b: Segment[]) =>
+    JSON.stringify(a) === JSON.stringify(b);
+
 
   useEffect(() => {
     const sorted = [...segments]
       .sort((a, b) => a.start - b.start)
       .map((s, idx) => ({ ...s, id: idx }));
-    setArr(sorted);
+    if (!segmentsEqual(sorted, arrRef.current)) {
+      setArr(sorted);
+    }
     origRef.current = sorted.map(s => ({ ...s }));
   }, [segments]);
 

@@ -5,7 +5,6 @@ import { db } from '@/app/firebase'
 export async function GET() {
   try {
     const snap = await getDocs(collection(db, 'videos'))
-
     const data = snap.docs.map(doc => {
       const d = doc.data() as any
       return {
