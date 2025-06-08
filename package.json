@@ -9,13 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google-cloud/speech": "^5.5.0",
     "@google-cloud/storage": "^7.16.0",
+    "@google-cloud/translate": "^8.0.4",
+    "ffmpeg-static": "^4.4.0",
     "firebase": "^11.9.0",
+    "firebase-admin": "^12.7.0",
+    "fluent-ffmpeg": "^2.1.2",
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

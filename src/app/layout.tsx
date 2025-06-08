@@ -31,10 +31,9 @@ export default function RootLayout({
         <DragDropProvider>
           <nav className="flex gap-4 justify-center">
             <Link href="/">Домой</Link>
-            {/* Prefetched when the link is hovered or enters the viewport */}
             <Link href="/videos">Видео</Link>
-            {/* No prefetching */}
             <Link href="/exercises">Упражнения</Link>
+            <Link href="/upload">Загрузить видео</Link>
           </nav>
 
           {children}
