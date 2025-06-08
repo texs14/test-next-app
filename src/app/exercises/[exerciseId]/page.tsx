@@ -8,10 +8,9 @@ import SentenceExercise from '@/components/SentenceExercise'
 import type { Exercise } from '@/types/index.types'
 
 export default function ExercisePage() {
-  const { exerciseId } = useParams<{ exerciseId: string }>()
+  const { exerciseId } = useParams<any>()
   const [exercise, setExercise] = useState<Exercise | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
-
   useEffect(() => {
     if (!exerciseId) return
     ;(async () => {

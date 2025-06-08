@@ -8,7 +8,7 @@ import { db } from '@/app/firebase'
 import type { VideoDoc } from '@/types/index.types'
 
 export default function VideoViewPage() {
-  const { videoId } = useParams<{ videoId: string }>()
+  const { videoId } = useParams<any>()
   const router = useRouter()
   const [videoDoc, setVideoDoc] = useState<VideoDoc | null>(null)
   const [error, setError] = useState<string | null>(null)
