@@ -1,19 +1,18 @@
-import React from 'react';
-// import { useNavigate } from 'react-router-dom';
-import type { VideoMeta } from '@/types/video.types';
+import React from 'react'
+import Link from 'next/link'
+import type { VideoMeta } from '@/types/video.types'
 
 interface Props {
   video: VideoMeta;
 }
 
 export default function VideoCard({ video }: Props) {
-  // const navigate = useNavigate();
 
   return (
     <div className="relative group">
       {/* Обёртка с кликом по превью */}
-      <div
-        // onClick={() => navigate(`/video/${video.videoId}`, { state: { videoUrl: video.videoUrl } })}
+      <Link
+        href={`/videos/${video.videoId}`}
         className="space-y-2 transition cursor-pointer hover:opacity-90"
       >
         <video
@@ -29,7 +28,7 @@ export default function VideoCard({ video }: Props) {
             {video.updated ? new Date(video.updated).toLocaleString() : '—'}
           </p>
         </div>
-      </div>
+      </Link>
 
       {/* Кнопка "Редактировать" */}
       <button
