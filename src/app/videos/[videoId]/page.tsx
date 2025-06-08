@@ -27,6 +27,7 @@ export default function VideoViewPage() {
       } catch (e: unknown) {
         console.error(e)
         setError(e instanceof Error ? e.message : 'Unknown error')
+
       }
     })()
   }, [videoId])
@@ -54,6 +55,7 @@ export default function VideoViewPage() {
       >
         Назад
       </button>
+
       <VideoPlayer
         src={videoDoc.src}
         subtitles={videoDoc.subtitle}
