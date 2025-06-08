@@ -1,10 +1,13 @@
-import VideoCard, { VideoMeta } from '@/components/VideoCard'
+import VideoCard from '@/components/VideoCard'
 import { headers } from 'next/headers'
 
+import {VideoMeta} from '@/types/video.types'
+
 async function getVideos() {
-  const host = headers().get('host')
-  const protocol = host?.startsWith('localhost') ? 'http' : 'https'
-  const res = await fetch(`${protocol}://${host}/api/videos`, { cache: 'no-store' })
+    const host = (await headers()).get('host')
+    const protocol = host?.startsWith('localhost') ? 'http' : 'https'
+    const res = await fetch(`${protocol}://${host}/api/videos`, { cache: 'no-store' })
+    console.log('res', res)
   if (!res.ok) {
     throw new Error('Failed to load videos')
   }
@@ -16,6 +19,7 @@ export default async function VideosPage() {
   let error: string | null = null
   try {
     videos = await getVideos()
+    console.log('videos', videos)
   } catch (e: unknown) {
     error = e instanceof Error ? e.message : 'Unknown error'
   }
