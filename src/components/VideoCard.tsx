@@ -16,7 +16,7 @@ export default function VideoCard({ video }: Props) {
         className="space-y-2 transition cursor-pointer hover:opacity-90"
       >
         <video
-          src={video.videoUrl + '#t=0.1'}
+          src={video.videoUrl}
           controls
           muted
           className="w-full rounded shadow aspect-video"

@@ -19,7 +19,6 @@ const resolvedFfmpeg =
   process.env.FFMPEG_PATH || (existsSync(localFfmpeg) ? localFfmpeg : ffmpegStatic || '')
 ffmpeg.setFfmpegPath(resolvedFfmpeg)
 
-
 const projectId = process.env.GOOGLE_PROJECT_ID as string
 const clientEmail = process.env.GOOGLE_CLIENT_EMAIL as string
 const rawKey = process.env.GOOGLE_PRIVATE_KEY as string
