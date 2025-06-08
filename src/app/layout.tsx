@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from 'next/link'
 import DragDropProvider from './DragDropProvider'
+import { AuthProvider } from '@/contexts/AuthContext'
+import ProtectedLayout from '@/components/ProtectedLayout'
+import Nav from '@/components/Nav'
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,18 +19,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased flex-col items-center justify-center">
-        <DragDropProvider>
-          <nav className="flex gap-4 justify-center">
-            <Link href="/">Домой</Link>
-            <Link href="/videos">Видео</Link>
-            <Link href="/exercises">Упражнения</Link>
-            <Link href="/upload">Загрузить видео</Link>
-          </nav>
-
-          {children}
-        </DragDropProvider>
-
-
+        <AuthProvider>
+          <ProtectedLayout>
+            <DragDropProvider>
+              <Nav />
+              {children}
+            </DragDropProvider>
+          </ProtectedLayout>
+        </AuthProvider>
       </body>
     </html>
   );
