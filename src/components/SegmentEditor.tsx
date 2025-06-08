@@ -45,7 +45,6 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
       isInitial.current = false;
       return;
     }
-    onChangeRef.current(arr);
   }, [arr]);
 
 
