@@ -23,6 +23,7 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
   const segmentsEqual = (a: Segment[], b: Segment[]) =>
     JSON.stringify(a) === JSON.stringify(b);
 
+
   useEffect(() => {
     const sorted = [...segments]
       .sort((a, b) => a.start - b.start)
