@@ -7,9 +7,18 @@ import { Storage } from '@google-cloud/storage'
 import { SpeechClient } from '@google-cloud/speech'
 import { TranslationServiceClient } from '@google-cloud/translate'
 import ffmpeg from 'fluent-ffmpeg'
-import ffmpegPath from 'ffmpeg-static'
+import ffmpegStatic from 'ffmpeg-static'
+import { existsSync } from 'fs'
 
-ffmpeg.setFfmpegPath(ffmpegPath)
+const localFfmpeg = join(
+  process.cwd(),
+  'node_modules/ffmpeg-static',
+  process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg'
+)
+const resolvedFfmpeg =
+  process.env.FFMPEG_PATH || (existsSync(localFfmpeg) ? localFfmpeg : ffmpegStatic || '')
+ffmpeg.setFfmpegPath(resolvedFfmpeg)
+
 
 const projectId = process.env.GOOGLE_PROJECT_ID as string
 const clientEmail = process.env.GOOGLE_CLIENT_EMAIL as string
