@@ -31,12 +31,12 @@ export default function VideoCard({ video }: Props) {
       </Link>
 
       {/* Кнопка "Редактировать" */}
-      <button
-        // onClick={() => navigate(`/upload/${video.videoId}`)}
+      <Link
+        href={`/upload/${video.videoId}`}
         className="absolute px-2 py-1 text-xs text-white transition bg-blue-600 rounded opacity-0 top-2 right-2 group-hover:opacity-100"
       >
         Редактировать
-      </button>
+      </Link>
     </div>
   );
 }
