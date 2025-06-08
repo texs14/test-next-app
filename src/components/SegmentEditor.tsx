@@ -13,14 +13,38 @@ interface Props {
 export function SegmentEditor({ segments, originalLang, targetLangs, onChange }: Props) {
   const [arr, setArr] = useState<Segment[]>([]);
   const origRef = useRef<Segment[]>([]);
+  const arrRef = useRef<Segment[]>([]);
+  const isInitial = useRef(true);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
+  useEffect(() => {
+    arrRef.current = arr;
+  }, [arr]);
+
+  const segmentsEqual = (a: Segment[], b: Segment[]) =>
+    JSON.stringify(a) === JSON.stringify(b);
 
   useEffect(() => {
     const sorted = [...segments]
       .sort((a, b) => a.start - b.start)
       .map((s, idx) => ({ ...s, id: idx }));
-    setArr(sorted);
+    if (!segmentsEqual(sorted, arrRef.current)) {
+      setArr(sorted);
+    }
     origRef.current = sorted.map(s => ({ ...s }));
   }, [segments]);
+
+  useEffect(() => {
+    if (isInitial.current) {
+      isInitial.current = false;
+      return;
+    }
+    onChangeRef.current(arr);
+  }, [arr]);
 
   // Сегментируем текст на слова через Intl.Segmenter
   const segmentWords = (text: string): Word[] => {
@@ -45,7 +69,6 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
       const copy = prev.map((s, i) => (i === idx ? { ...s, text: value, words: newWords } : s));
       const renumbered = copy.map((s, i) => ({ ...s, id: i }));
       origRef.current = renumbered.map(s => ({ ...s }));
-      onChange(renumbered);
       return renumbered;
     });
   };
@@ -60,7 +83,6 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
         result = copy.map((s, i) => ({ ...s, id: i }));
       }
       origRef.current = result.map(s => ({ ...s }));
-      onChange(result);
       return result;
     });
   };
@@ -75,7 +97,6 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
         }
         return s;
       });
-      onChange(copy);
       return copy;
     });
   };
@@ -91,7 +112,6 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
         }
         return s;
       });
-      onChange(copy);
       return copy;
     });
   };
@@ -106,7 +126,6 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
         }
         return s;
       });
-      onChange(copy);
       return copy;
     });
   };
@@ -116,7 +135,6 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
       const copy = prev.map((s, i) => (i === idx ? { ...origRef.current[i] } : s));
       const sorted = copy.sort((a, b) => a.start - b.start).map((s, i) => ({ ...s, id: i }));
       origRef.current = sorted.map(s => ({ ...s }));
-      onChange(sorted);
       return sorted;
     });
   };
@@ -127,7 +145,6 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
       const filtered = prev.filter((_, i) => i !== idx);
       const renumbered = filtered.map((s, i) => ({ ...s, id: i }));
       origRef.current = renumbered.map(s => ({ ...s }));
-      onChange(renumbered);
       return renumbered;
     });
   };
@@ -148,7 +165,6 @@ export function SegmentEditor({ segments, originalLang, targetLangs, onChange }:
       const copy = [...prev, newSeg];
       const sorted = copy.sort((a, b) => a.start - b.start).map((s, i) => ({ ...s, id: i }));
       origRef.current = sorted.map(s => ({ ...s }));
-      onChange(sorted);
       return sorted;
     });
   };
