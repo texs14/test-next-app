@@ -13,8 +13,8 @@ const cx = (...classes: Array<string | Record<string, boolean>>) => {
 
 interface WordChipProps {
   word: string;
-  index: number;
-  onDragStart: (ev: DragEvent<HTMLDivElement>, index: number) => void;
+  id: string;
+  onDragStart: (ev: DragEvent<HTMLDivElement>, id: string) => void;
   onClick?: () => void;
   isPlaced: boolean; // true, если слово уже помещено в “слот”
   isCorrect?: boolean; // undefined (не проверяли), true (правильно), false (неправильно)
@@ -22,7 +22,7 @@ interface WordChipProps {
 
 export const WordChip: React.FC<WordChipProps> = ({
   word,
-  index,
+  id,
   onDragStart,
   onClick,
   isPlaced,
@@ -44,7 +44,10 @@ export const WordChip: React.FC<WordChipProps> = ({
       draggable={!isPlaced}
       onDragStart={e => {
         // Если уже помещено, не разрешаем drag
-        if (!isPlaced) onDragStart(e, index);
+        if (!isPlaced) onDragStart(e, id);
+      }}
+      onClick={() => {
+        if (!isPlaced && onClick) onClick();
       }}
       onClick={() => {
         if (!isPlaced && onClick) onClick();

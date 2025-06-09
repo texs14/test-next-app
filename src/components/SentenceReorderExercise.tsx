@@ -57,8 +57,8 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
     setFeedback(null);
   }, [currentIndex, data.sentences]);
 
-  const onDragStart = (e: DragEvent<HTMLDivElement>, index: number) => {
-    e.dataTransfer.setData('text/plain', String(index));
+  const onDragStart = (e: DragEvent<HTMLDivElement>, id: string) => {
+    e.dataTransfer.setData('text/plain', id);
     e.dataTransfer.effectAllowed = 'move';
   };
 
@@ -66,10 +66,12 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
     e.preventDefault();
   };
 
-  const onDropWord = (slotIdx: number, wordIdx: number) => {
+  const onDropWord = (slotIdx: number, wordId: string) => {
     setShuffledTokens(prev => {
-      const word = prev[wordIdx];
-      const remaining = prev.filter((_, i) => i !== wordIdx);
+      const idx = prev.findIndex(w => w.id === wordId);
+      if (idx === -1) return prev;
+      const word = prev[idx];
+      const remaining = prev.filter((_, i) => i !== idx);
       setSlots(sPrev => {
         const updated = [...sPrev];
         const replaced = updated[slotIdx];
@@ -127,15 +129,15 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
           className="flex flex-wrap gap-2 p-2 border border-dashed border-gray-400 rounded min-h-[3rem]"
           onDragOver={onDragOver}
         >
-          {shuffledTokens.map((tok, idx) => (
+          {shuffledTokens.map(tok => (
             <WordChip
               key={tok.id}
               word={tok.text}
-              index={idx}
+              id={tok.id}
               onDragStart={onDragStart}
               onClick={() => {
                 const emptyIdx = slots.findIndex(s => s === null);
-                if (emptyIdx !== -1) onDropWord(emptyIdx, idx);
+                if (emptyIdx !== -1) onDropWord(emptyIdx, tok.id);
               }}
               isPlaced={false}
             />
