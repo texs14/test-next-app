@@ -1,6 +1,8 @@
 // src/components/SentenceReorderExercise.tsx
 import React, { useState, useEffect, DragEvent } from 'react';
 import { tokenizeThaiSentence } from '../utils/thaiTokenizer';
+import { WordChip } from './WordChip';
+import { DropSlot } from './DropSlot';
 
 export interface ExerciseSentence {
   text: string;
@@ -30,8 +32,8 @@ interface SentenceReorderExerciseProps {
 export default function SentenceReorderExercise({ data }: SentenceReorderExerciseProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [shuffledTokens, setShuffledTokens] = useState<TokenState[]>([]);
-  const [dropZone, setDropZone] = useState<TokenState[]>([]);
-  const [feedback, setFeedback] = useState<{ id: string; correct: boolean }[] | null>(null);
+  const [slots, setSlots] = useState<(TokenState | null)[]>([]);
+  const [feedback, setFeedback] = useState<boolean[] | null>(null);
 
   // Whenever currentIndex changes, re-tokenize & shuffle
   useEffect(() => {
@@ -51,76 +53,62 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
       [copy[i], copy[j]] = [copy[j], copy[i]];
     }
     setShuffledTokens(copy);
-    // Reset drop area & feedback
-    setDropZone([]);
+    setSlots(Array(keyed.length).fill(null));
     setFeedback(null);
   }, [currentIndex, data.sentences]);
 
-  // When user drags a token out of shuffledTokens → dropZone
-  const onDragStart = (
-    e: DragEvent<HTMLDivElement>,
-    token: TokenState,
-    source: 'shuffled' | 'drop',
-  ) => {
-    e.dataTransfer.setData('application/json', JSON.stringify({ token, source }));
-    // For Firefox compatibility
+  const onDragStart = (e: DragEvent<HTMLDivElement>, id: string) => {
+    e.dataTransfer.setData('text/plain', id);
     e.dataTransfer.effectAllowed = 'move';
   };
 
   const onDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
   };
 
-  const onDropToDropZone = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const payload = JSON.parse(e.dataTransfer.getData('application/json')) as {
-      token: TokenState;
-      source: 'shuffled' | 'drop';
-    };
+  const onDropWord = (slotIdx: number, wordId: string) => {
+    const newList = [...shuffledTokens];
+    const newSlots = [...slots];
 
-    // Remove token from its source list
-    if (payload.source === 'shuffled') {
-      setShuffledTokens(prev => prev.filter(t => t.id !== payload.token.id));
-      setDropZone(prev => [...prev, payload.token]);
-    } else {
-      // If dragging from dropZone back to dropZone? ignore
+    let dragged: TokenState | undefined;
+
+    const listIdx = newList.findIndex(t => t.id === wordId);
+    if (listIdx !== -1) {
+      dragged = newList.splice(listIdx, 1)[0];
     }
+
+    if (!dragged) {
+      const fromIdx = newSlots.findIndex(t => t?.id === wordId);
+      if (fromIdx !== -1) {
+        dragged = newSlots[fromIdx] || undefined;
+        newSlots[fromIdx] = null;
+      }
+    }
+
+    if (!dragged) return;
+
+    const replaced = newSlots[slotIdx];
+    newSlots[slotIdx] = dragged;
+    if (replaced) {
+      if (!newList.find(t => t.id === replaced!.id)) {
+        newList.push(replaced);
+      }
+    }
+
+    setShuffledTokens(newList);
+    setSlots(newSlots);
     setFeedback(null);
-  };
-
-  const onDropToShuffled = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const payload = JSON.parse(e.dataTransfer.getData('application/json')) as {
-      token: TokenState;
-      source: 'shuffled' | 'drop';
-    };
-
-    if (payload.source === 'drop') {
-      setDropZone(prev => prev.filter(t => t.id !== payload.token.id));
-      setShuffledTokens(prev => [...prev, payload.token]);
-      setFeedback(null);
-    }
-    // If dragging within shuffled, ignore
   };
 
   const checkAnswer = () => {
     const sentenceObj = data.sentences[currentIndex];
-    // Build user string by concatenating dropZone tokens in order:
-    const userJoined = dropZone.map(t => t.text).join('');
-    // Compare against each rightAnswers (they are strings)
+    const userJoined = slots.map(s => s?.text || '').join('');
     const isCorrect = sentenceObj.rightAnswers.includes(userJoined);
-
-    // prepare feedback: for each token in dropZone, mark correct position/incorrect
-    const correctTokens: { id: string; correct: boolean }[] = dropZone.map((t, idx) => {
-      // Check if t.text in the “correct token list” at this idx.
-      // We need to split the “rightAnswers[0]” into tokens in identical fashion, then compare text by position.
-      const rightTokens = tokenizeThaiSentence(sentenceObj.rightAnswers[0]);
-      const isTokenCorrect = idx < rightTokens.length && t.text === rightTokens[idx];
-      return { id: t.id, correct: isCorrect && isTokenCorrect };
+    const rightTokens = tokenizeThaiSentence(sentenceObj.rightAnswers[0]);
+    const fb = slots.map((tok, idx) => {
+      return tok ? isCorrect && tok.text === rightTokens[idx] : false;
     });
-
-    setFeedback(correctTokens);
+    setFeedback(fb);
   };
 
   const goToNext = () => {
@@ -156,57 +144,34 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
         <div
           className="flex flex-wrap gap-2 p-2 border border-dashed border-gray-400 rounded min-h-[3rem]"
           onDragOver={onDragOver}
-          onDrop={onDropToShuffled}
         >
-          {shuffledTokens.map(tok => {
-            const isWrong = feedback?.find(fb => fb.id === tok.id && fb.correct === false);
-            const isRight = feedback?.find(fb => fb.id === tok.id && fb.correct === true);
-            return (
-              <div
-                key={tok.id}
-                draggable
-                onDragStart={e => onDragStart(e, tok, 'shuffled')}
-                className={`px-2 py-1 rounded cursor-move select-none border ${
-                  isRight
-                    ? 'bg-green-200 border-green-400'
-                    : isWrong
-                      ? 'bg-red-200 border-red-400'
-                      : 'bg-white border-gray-300'
-                }`}
-              >
-                {tok.text}
-              </div>
-            );
-          })}
+          {shuffledTokens.map(tok => (
+            <WordChip
+              key={tok.id}
+              word={tok.text}
+              id={tok.id}
+              onDragStart={onDragStart}
+              onClick={() => {
+                const emptyIdx = slots.findIndex(s => s === null);
+                if (emptyIdx !== -1) onDropWord(emptyIdx, tok.id);
+              }}
+              isPlaced={false}
+            />
+          ))}
         </div>
 
-        {/* Drop zone */}
-        <div
-          className="flex flex-wrap gap-2 p-2 border border-dashed border-blue-400 rounded min-h-[3rem] bg-blue-50"
-          onDragOver={onDragOver}
-          onDrop={onDropToDropZone}
-        >
-          {dropZone.map(tok => {
-            const fb = feedback?.find(fb => fb.id === tok.id);
-            const isRight = fb?.correct === true;
-            const isWrong = fb?.correct === false;
-            return (
-              <div
-                key={tok.id}
-                draggable
-                onDragStart={e => onDragStart(e, tok, 'drop')}
-                className={`px-2 py-1 rounded cursor-move select-none border ${
-                  isRight
-                    ? 'bg-green-200 border-green-400'
-                    : isWrong
-                      ? 'bg-red-200 border-red-400'
-                      : 'bg-white border-blue-300'
-                }`}
-              >
-                {tok.text}
-              </div>
-            );
-          })}
+        {/* Drop slots */}
+        <div className="flex flex-wrap gap-2 p-2 border border-dashed border-blue-400 rounded min-h-[3rem] bg-blue-50">
+          {slots.map((slot, idx) => (
+            <DropSlot
+              key={idx}
+              slotIndex={idx}
+              placedWord={slot}
+              onDropWord={onDropWord}
+              onDragStart={onDragStart}
+              isCorrect={feedback ? feedback[idx] : undefined}
+            />
+          ))}
         </div>
 
         <div className="flex space-x-4">
