@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Link from 'next/link'
 import DragDropProvider from './DragDropProvider'
 import { AuthProvider } from '@/contexts/AuthContext'
 import ProtectedLayout from '@/components/ProtectedLayout'
