@@ -57,39 +57,40 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
   };
 
   const onDropWord = (slotIdx: number, wordId: string) => {
+    // Снимаем слово с прежнего места и подготавливаем новые состояния
+    const newShuffled = [...shuffled];
+    const newSlots = [...slots];
+
     let dragged: TokenState | undefined;
 
-    // Remove from shuffled if present
-    setShuffled(prev => {
-      const idx = prev.findIndex(w => w.id === wordId);
-      if (idx !== -1) {
-        dragged = prev[idx];
-        return prev.filter((_, i) => i !== idx);
+    // Попробуем найти слово в списке не выбранных
+    const listIdx = newShuffled.findIndex(t => t.id === wordId);
+    if (listIdx !== -1) {
+      dragged = newShuffled.splice(listIdx, 1)[0];
+    }
+
+    // Если не нашли, ищем среди слотов
+    if (!dragged) {
+      const fromIdx = newSlots.findIndex(t => t?.id === wordId);
+      if (fromIdx !== -1) {
+        dragged = newSlots[fromIdx] || undefined;
+        newSlots[fromIdx] = null;
       }
-      return prev;
-    });
+    }
 
-    setSlots(prev => {
-      const updated = [...prev];
+    if (!dragged) return;
 
-      if (!dragged) {
-        const fromIdx = prev.findIndex(t => t?.id === wordId);
-        if (fromIdx !== -1) {
-          dragged = prev[fromIdx] || undefined;
-          updated[fromIdx] = null;
-        }
+    const replaced = newSlots[slotIdx];
+    newSlots[slotIdx] = dragged;
+    if (replaced) {
+      // возвращаем заменённое слово в список, если его там ещё нет
+      if (!newShuffled.find(t => t.id === replaced!.id)) {
+        newShuffled.push(replaced);
       }
+    }
 
-      if (!dragged) return prev;
-
-      const replaced = updated[slotIdx];
-      updated[slotIdx] = dragged;
-      if (replaced) {
-        setShuffled(sPrev => [...sPrev, replaced]);
-      }
-      return updated;
-    });
-
+    setShuffled(newShuffled);
+    setSlots(newSlots);
     setFeedback(null);
     setIsChecked(false);
   };
@@ -108,7 +109,18 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
   };
 
   const handleReset = () => {
-    setShuffled(prev => [...prev, ...slots.filter(Boolean) as TokenState[]]);
+    setShuffled(prev => {
+      const ids = new Set(prev.map(t => t.id));
+      const toAdd = slots.filter(Boolean) as TokenState[];
+      const merged = [...prev];
+      toAdd.forEach(tok => {
+        if (!ids.has(tok.id)) {
+          merged.push(tok);
+          ids.add(tok.id);
+        }
+      });
+      return merged;
+    });
     setSlots(slots.map(() => null));
     setFeedback(null);
     setIsChecked(false);

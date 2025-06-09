@@ -67,37 +67,36 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
   };
 
   const onDropWord = (slotIdx: number, wordId: string) => {
+    const newList = [...shuffledTokens];
+    const newSlots = [...slots];
+
     let dragged: TokenState | undefined;
 
-    setShuffledTokens(prev => {
-      const idx = prev.findIndex(w => w.id === wordId);
-      if (idx !== -1) {
-        dragged = prev[idx];
-        return prev.filter((_, i) => i !== idx);
+    const listIdx = newList.findIndex(t => t.id === wordId);
+    if (listIdx !== -1) {
+      dragged = newList.splice(listIdx, 1)[0];
+    }
+
+    if (!dragged) {
+      const fromIdx = newSlots.findIndex(t => t?.id === wordId);
+      if (fromIdx !== -1) {
+        dragged = newSlots[fromIdx] || undefined;
+        newSlots[fromIdx] = null;
       }
-      return prev;
-    });
+    }
 
-    setSlots(prev => {
-      const updated = [...prev];
+    if (!dragged) return;
 
-      if (!dragged) {
-        const fromIdx = prev.findIndex(t => t?.id === wordId);
-        if (fromIdx !== -1) {
-          dragged = prev[fromIdx] || undefined;
-          updated[fromIdx] = null;
-        }
+    const replaced = newSlots[slotIdx];
+    newSlots[slotIdx] = dragged;
+    if (replaced) {
+      if (!newList.find(t => t.id === replaced!.id)) {
+        newList.push(replaced);
       }
+    }
 
-      if (!dragged) return prev;
-
-      const replaced = updated[slotIdx];
-      updated[slotIdx] = dragged;
-      if (replaced) {
-        setShuffledTokens(sPrev => [...sPrev, replaced]);
-      }
-      return updated;
-    });
+    setShuffledTokens(newList);
+    setSlots(newSlots);
 
     setFeedback(null);
   };
