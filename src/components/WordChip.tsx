@@ -15,6 +15,7 @@ interface WordChipProps {
   word: string;
   index: number;
   onDragStart: (ev: DragEvent<HTMLDivElement>, index: number) => void;
+  onClick?: () => void;
   isPlaced: boolean; // true, если слово уже помещено в “слот”
   isCorrect?: boolean; // undefined (не проверяли), true (правильно), false (неправильно)
 }
@@ -23,6 +24,7 @@ export const WordChip: React.FC<WordChipProps> = ({
   word,
   index,
   onDragStart,
+  onClick,
   isPlaced,
   isCorrect,
 }) => {
@@ -43,6 +45,9 @@ export const WordChip: React.FC<WordChipProps> = ({
       onDragStart={e => {
         // Если уже помещено, не разрешаем drag
         if (!isPlaced) onDragStart(e, index);
+      }}
+      onClick={() => {
+        if (!isPlaced && onClick) onClick();
       }}
       data-interactive="true"
     >
