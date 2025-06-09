@@ -6,7 +6,7 @@ const cx = (...classes: Array<string | undefined | false>) =>
 interface DropSlotProps {
   slotIndex: number;
   placedWordText: string;
-  onDropWord: (slotIdx: number, wordIdx: number) => void;
+  onDropWord: (slotIdx: number, wordId: string) => void;
   isCorrect?: boolean; // для подсветки: true / false / undefined
 }
 
@@ -24,11 +24,10 @@ export const DropSlot: React.FC<DropSlotProps> = ({
   const handleDrop = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
       e.preventDefault();
-      // извлекаем индекс слова из dataTransfer
-      const wordIdxString = e.dataTransfer.getData('text/plain');
-      if (!wordIdxString) return;
-      const wordIdx = Number(wordIdxString);
-      onDropWord(slotIndex, wordIdx);
+      // извлекаем идентификатор слова из dataTransfer
+      const wordId = e.dataTransfer.getData('text/plain');
+      if (!wordId) return;
+      onDropWord(slotIndex, wordId);
     },
     [slotIndex, onDropWord],
   );

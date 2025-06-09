@@ -1,12 +1,13 @@
-// src/components/exercises/SentenceExercise.tsx
+// src/components/SentenceExercise.tsx
 import Image from 'next/image';
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useDrag, useDrop, useDragLayer } from 'react-dnd';
-import { getEmptyImage } from 'react-dnd-html5-backend';
+import React, { useEffect, useState, DragEvent } from 'react';
+import { tokenizeThaiSentence } from '../utils/thaiTokenizer';
+import { WordChip } from './WordChip';
+import { DropSlot } from './DropSlot';
 
 interface Sentence {
-  text: string; // Полное предложение на тайском, например: "นี่คือข้อเสนอการทดสอบสำหรับการตรวจสอบ"
-  rightAnswers: string[]; // Массив «правильных ответов» (в данном случае часто это будет одно и то же предложение)
+  text: string;
+  rightAnswers: string[];
   translations: {
     ru: string;
     en: string;
@@ -19,404 +20,144 @@ interface Sentence {
 
 interface Props {
   sentence: Sentence;
-  onComplete: () => void; // Callback при успешной проверке
-  isActive: boolean; // Является ли это текущее (или уже пройденное) задание
-  index: number; // Порядковый номер задания (0-based)
+  onComplete: () => void;
+  isActive: boolean;
+  index: number;
 }
 
-type DraggableWord = {
-  id: string; // Уникальный идентификатор слова (чтобы не было коллизий)
-  text: string; // Само слово
-  correctIndex: number; // Позиция в «правильном ответе»
-};
-
-// Элемент перетаскивания с указанием его текущего списка
-type DragItem = DraggableWord & { fromList: boolean; width: number };
-
-const ITEM_TYPE = 'WORD';
-
-// Компонент для кастомного слоя перетаскивания
-const DragPreview: React.FC = () => {
-  const { itemType, item, isDragging, currentOffset } = useDragLayer(monitor => ({
-    itemType: monitor.getItemType(),
-    item: monitor.getItem() as DragItem | null,
-    isDragging: monitor.isDragging(),
-    currentOffset: monitor.getSourceClientOffset(),
-  }));
-
-  if (!isDragging || itemType !== ITEM_TYPE || !currentOffset || !item) return null;
-
-  const { x = 0, y = 0 } = currentOffset;
-
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        pointerEvents: 'none',
-        left: 0,
-        top: 0,
-        transform: `translate(${x}px, ${y}px)`,
-        zIndex: 1000,
-      }}
-    >
-      <div className="px-3 py-1 bg-gray-200 rounded shadow">{item.text}</div>
-    </div>
-  );
-};
-
-interface WordChipProps {
-  word: DraggableWord;
-  fromList: boolean; // где находится слово в данный момент
-  disabled: boolean;
-  colorClass?: string; // цвет фона
-  index?: number; // позиция слова в пользовательской зоне или списке
-  moveWord?: (dragIndex: number, hoverIndex: number) => void; // перестановка
-  insertWordFromList?: (word: DraggableWord, at: number) => void; // вставка слова из списка
-  onDragStart: (item: DragItem) => void; // уведомить родителя о начале drag
-  onDragEnd: (item: DragItem, didDrop: boolean) => void; // уведомить о завершении
+interface TokenState {
+  id: string;
+  text: string;
 }
-
-// Универсальный чип, который может перетаскиваться между двумя списками
-const WordChip: React.FC<WordChipProps> = ({
-  word,
-  fromList,
-  disabled,
-  colorClass,
-  index,
-  moveWord,
-  insertWordFromList,
-  onDragStart,
-  onDragEnd,
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [hoverPos, setHoverPos] = useState<'left' | 'right' | null>(null);
-  const [dragWidth, setDragWidth] = useState(0);
-
-  const [{ isDragging }, drag, preview] = useDrag<
-    DragItem & { index?: number },
-    void,
-    { isDragging: boolean }
-  >(
-    () => ({
-      type: ITEM_TYPE,
-      item: () => {
-        const width = ref.current?.offsetWidth || 0;
-        const item = { ...word, fromList, index, width };
-        onDragStart(item);
-        return item;
-      },
-      canDrag: !disabled,
-      end: (item, monitor) => {
-        setHoverPos(null);
-        if (item) onDragEnd(item as DragItem, monitor.didDrop());
-      },
-    }),
-    [word, fromList, disabled, index, onDragStart, onDragEnd],
-  );
-
-  const [{ isOver }, drop] = useDrop<
-    DragItem & { index?: number },
-    { handled?: boolean },
-    { isOver: boolean }
-  >(
-    () => ({
-      accept: ITEM_TYPE,
-      drop: (item, monitor) => {
-        setHoverPos(null);
-        if (!monitor.isOver({ shallow: true })) return;
-        if (!fromList && item.fromList && insertWordFromList && index !== undefined) {
-          const at = hoverPos === 'right' ? index + 1 : index;
-          insertWordFromList(item, at);
-          item.fromList = false;
-          item.index = at;
-          return { handled: true };
-        }
-      },
-      hover: (item, monitor) => {
-        if (!ref.current) return;
-        const rect = ref.current.getBoundingClientRect();
-        const middleX = (rect.right - rect.left) / 2;
-        const client = monitor.getClientOffset();
-        if (!client) return;
-        const offsetX = client.x - rect.left;
-        const pos = offsetX < middleX ? 'left' : 'right';
-        setHoverPos(pos);
-        setDragWidth(item.width);
-
-        if (!moveWord || fromList || item.fromList) return;
-        if (item.index === undefined || index === undefined) return;
-        const targetIndex = pos === 'left' ? index : index + 1;
-        if (targetIndex === item.index || targetIndex - 1 === item.index) return;
-        const newIndex = targetIndex > item.index ? targetIndex - 1 : targetIndex;
-        moveWord(item.index, newIndex);
-        item.index = newIndex;
-      },
-      collect: monitor => ({
-        isOver: monitor.isOver({ shallow: true }),
-      }),
-    }),
-    [moveWord, fromList, index, insertWordFromList, hoverPos],
-  );
-
-  useEffect(() => {
-    if (!isOver) setHoverPos(null);
-  }, [isOver]);
-
-  // Скрываем стандартный drag preview
-  useEffect(() => {
-    preview(getEmptyImage(), { captureDraggingState: true });
-  }, [preview]);
-
-  return (
-    <div
-      ref={node => {
-        ref.current = node;
-        if (fromList) {
-          drag(node as HTMLDivElement);
-        } else {
-          drag(drop(node as HTMLDivElement));
-        }
-      }}
-      style={{
-        opacity: isDragging ? 0 : 1,
-        display: isDragging ? 'none' : undefined,
-        pointerEvents: isDragging ? 'none' : 'auto',
-        transform:
-          hoverPos === 'left'
-            ? `translateX(${dragWidth}px)`
-            : hoverPos === 'right'
-              ? `translateX(-${dragWidth}px)`
-              : 'none',
-        transition: hoverPos ? 'transform 0.3s ease-out' : undefined,
-      }}
-      className={`px-3 py-1 rounded cursor-move select-none ${colorClass || 'bg-gray-200'}`}
-      data-interactive="true"
-    >
-      {word.text}
-    </div>
-  );
-};
 
 export default function SentenceExercise({ sentence, onComplete, isActive, index }: Props) {
-  const [shuffled, setShuffled] = useState<DraggableWord[]>([]);
-  const [userOrder, setUserOrder] = useState<DraggableWord[]>([]);
+  const [shuffled, setShuffled] = useState<TokenState[]>([]);
+  const [slots, setSlots] = useState<(TokenState | null)[]>([]);
+  const [feedback, setFeedback] = useState<boolean[] | null>(null);
   const [isChecked, setIsChecked] = useState(false);
-  const [feedback, setFeedback] = useState<boolean[]>([]); // true = правильно, false = неправильно
 
-  const dropZoneRef = useRef<HTMLDivElement>(null);
-
-  const handleChipDragStart = useCallback(() => {
-    /* no-op */
-  }, []);
-
-  const handleChipDragEnd = useCallback(() => {
-    /* no-op */
-  }, []);
-
-  const moveWord = useCallback((from: number, to: number) => {
-    setUserOrder(prev => {
-      const updated = [...prev];
-      const [moved] = updated.splice(from, 1);
-      updated.splice(to, 0, moved);
-      return updated;
-    });
-  }, []);
-
-  const insertWordFromList = useCallback((word: DraggableWord, at: number) => {
-    setShuffled(prev => prev.filter(w => w.id !== word.id));
-    setUserOrder(prev => {
-      const updated = [...prev];
-      updated.splice(at, 0, word);
-      return updated;
-    });
-  }, []);
-
-  // Зона для составления предложения
-  const [{ isOver }, dropToUser] = useDrop<DragItem, void, { isOver: boolean }>(
-    () => ({
-      accept: ITEM_TYPE,
-      drop: (item, monitor) => {
-        if (monitor.didDrop()) return;
-        if (item.fromList && !userOrder.find(w => w.id === item.id)) {
-          // перенос из общего списка в конец, если не попали на слово
-          setShuffled(prev => prev.filter(w => w.id !== item.id));
-          setUserOrder(prev => [...prev, item]);
-        }
-      },
-      collect: monitor => ({
-        isOver: monitor.isOver({ shallow: true }),
-      }),
-    }),
-    [userOrder, shuffled],
-  );
-
-  // Зона со всеми словами
-  const [{ isOver: isOverList }, dropToList] = useDrop<DragItem, void, { isOver: boolean }>(
-    () => ({
-      accept: ITEM_TYPE,
-      drop: (item: DragItem) => {
-        if (!item.fromList) {
-          // перенос из пользовательского поля обратно в список
-          setUserOrder(prev => prev.filter(w => w.id !== item.id));
-          setShuffled(prev => [...prev, item]);
-        }
-      },
-      collect: monitor => ({
-        isOver: monitor.isOver({ shallow: true }),
-      }),
-    }),
-    [userOrder, shuffled],
-  );
-
-  // При инициализации разбиваем текст на тайские «слова» через Intl.Segmenter
   useEffect(() => {
     if (!isActive) return;
-
-    // Разбиваем тайский текст на слова
-    const segmenter = new (Intl as any).Segmenter('th', { granularity: 'word' });
-    const segments = Array.from(segmenter.segment(sentence.text))
-      .map((seg: any) => seg.segment.trim())
-      .filter((w: string) => w.length > 0);
-
-    // Создаём массив объектов с уникальными id и правильным порядком
-    const correctSequence: DraggableWord[] = segments.map((w: string, idx: number) => ({
-      id: `${index}-${idx}-${w}`,
-      text: w,
-      correctIndex: idx,
-    }));
-
-    // Перемешиваем этот массив для Drag&Drop-поля
-    const shuffledCopy = [...correctSequence].sort(() => Math.random() - 0.5);
-    setShuffled(shuffledCopy);
-    setUserOrder([]); // очищаем поле пользователя
+    const tokens = tokenizeThaiSentence(sentence.text);
+    const keyed = tokens.map((tok, idx) => ({ id: `${index}-${idx}`, text: tok }));
+    const copy = [...keyed];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    setShuffled(copy);
+    setSlots(Array(keyed.length).fill(null));
+    setFeedback(null);
     setIsChecked(false);
-    setFeedback([]);
   }, [sentence.text, isActive, index]);
 
-  // Проверка: нажали «Проверить»
-  const handleCheck = () => {
-    // Собираем текст из userOrder и отдаем в rightAnswers (массив строк)
-    const assembled = userOrder.map(w => w.text).join('');
-    const isCorrect = sentence.rightAnswers.includes(assembled);
+  const onDragStart = (e: DragEvent<HTMLDivElement>, id: string) => {
+    e.dataTransfer.setData('text/plain', id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
 
-    // Проверяем по-словно: слова на тех же позициях, что и в правильном массиве
-    const feedbackArr = userOrder.map((w, idx) => {
-      return w.correctIndex === idx;
+  const onDropWord = (slotIdx: number, wordId: string) => {
+    setShuffled(prev => {
+      const idx = prev.findIndex(w => w.id === wordId);
+      if (idx === -1) return prev;
+      const word = prev[idx];
+      const remaining = prev.filter((_, i) => i !== idx);
+      setSlots(sPrev => {
+        const updated = [...sPrev];
+        const replaced = updated[slotIdx];
+        updated[slotIdx] = word;
+        if (replaced) remaining.push(replaced);
+        return updated;
+      });
+      return remaining;
     });
+    setFeedback(null);
+    setIsChecked(false);
+  };
 
-    setFeedback(feedbackArr);
+  const handleCheck = () => {
+    const assembled = slots.map(s => s?.text || '').join('');
+    const isCorrect = sentence.rightAnswers.includes(assembled);
+    const rightTokens = tokenizeThaiSentence(sentence.rightAnswers[0]);
+    const fb = slots.map((tok, idx) => (tok ? isCorrect && tok.text === rightTokens[idx] : false));
+    setFeedback(fb);
     setIsChecked(true);
-
     if (isCorrect) {
-      // через небольшой таймаут даём пользователю увидеть зелёные слова
-      setTimeout(() => {
-        onComplete();
-      }, 800);
+      setTimeout(onComplete, 800);
     }
   };
 
-  // Сброс текущего поля (например, перед проверкой нового предложения)
   const handleReset = () => {
-    setShuffled(prev => [...prev, ...userOrder]);
-    setUserOrder([]);
+    setShuffled(prev => [...prev, ...slots.filter(Boolean) as TokenState[]]);
+    setSlots(slots.map(() => null));
+    setFeedback(null);
     setIsChecked(false);
-    setFeedback([]);
   };
 
   return (
     <div className={`border rounded p-4 mb-6 ${!isActive ? 'opacity-50' : ''}`}>
-      {/* Если задание не активно (future), просто скрываем */}
+
       {!isActive && <p className="text-gray-400">Задание #{index + 1} ещё не доступно</p>}
 
       {isActive && (
         <>
           <h3 className="mb-2 text-lg font-semibold">Задание {index + 1}</h3>
           {sentence.note && sentence.note.ru && (
-            <div className="p-5 bg-gray-100 rounded-[20px] flex items-center ">
+            <div className="p-5 bg-gray-100 rounded-[20px] flex items-center">
               <Image src="/note.png" className="inline mr-2" alt="thai" width={30} height={35} />
               <p>{sentence.note.ru}</p>
             </div>
           )}
 
-          {/* Оригинальный текст (на тайском) */}
           <p className="mt-3 mb-3">Соберите предложение:</p>
-
-          <p className="p-4 mt-3 mb-4 bg-gray-100 border rounded-lg text-[18px] bold">
+          <p className="p-4 mt-3 mb-4 bg-gray-100 border rounded-lg text-[18px] font-bold">
             {sentence.translations.ru}
           </p>
 
-          {/* Зона со словарными чипсами (перемешано) */}
-          <div
-            ref={node => {
-              dropToList(node as HTMLDivElement);
-            }}
-            className={`flex flex-wrap gap-2 mb-4 border-2 border-dashed rounded ${isOverList ? 'border-yellow-400' : 'border-transparent'}`}
-          >
-            {shuffled.map((wordObj, idx) => (
+          <div className="flex flex-wrap gap-2 mb-4 border-2 border-dashed rounded">
+            {shuffled.map(tok => (
               <WordChip
-                key={wordObj.id}
-                word={wordObj}
-                fromList={true}
-                disabled={isChecked}
-                index={idx}
-                onDragStart={handleChipDragStart}
-                onDragEnd={handleChipDragEnd}
+                key={tok.id}
+                word={tok.text}
+                id={tok.id}
+                onDragStart={onDragStart}
+                onClick={() => {
+                  const emptyIdx = slots.findIndex(s => s === null);
+                  if (emptyIdx !== -1) onDropWord(emptyIdx, tok.id);
+                }}
+                isPlaced={false}
               />
             ))}
           </div>
 
-          {/* Поле пользователя (куда перетаскивают слова) */}
-          <div
-            ref={node => {
-              dropToUser(node as HTMLDivElement);
-              dropZoneRef.current = node;
-            }}
-            className={`min-h-[48px] border-2 border-dashed rounded p-2 mb-4 flex flex-wrap gap-2 ${isOver ? 'border-yellow-400' : 'border-gray-300'}`}
-          >
-            {userOrder.length === 0 && (
-              <span className="text-gray-400">Перетащите сюда слова...</span>
-            )}
-            {userOrder.map((w, idx) => {
-              const color = isChecked
-                ? feedback[idx]
-                  ? 'bg-green-300'
-                  : 'bg-red-300'
-                : 'bg-yellow-100';
-              return (
-                <WordChip
-                  key={w.id}
-                  word={w}
-                  fromList={false}
-                  disabled={isChecked}
-                  colorClass={color}
-                  index={idx}
-                  moveWord={moveWord}
-                  insertWordFromList={insertWordFromList}
-                  onDragStart={handleChipDragStart}
-                  onDragEnd={handleChipDragEnd}
-                />
-              );
-            })}
+          <div className="min-h-[48px] border-2 border-dashed rounded p-2 mb-4 flex flex-wrap gap-2">
+            {slots.map((slot, idx) => (
+              <DropSlot
+                key={idx}
+                slotIndex={idx}
+                placedWordText={slot?.text || ''}
+                onDropWord={onDropWord}
+                isCorrect={feedback ? feedback[idx] : undefined}
+              />
+            ))}
           </div>
 
-          {/* Кнопки «Проверить» и «Сброс» */}
           <div className="flex items-center gap-4">
             <button
               onClick={handleCheck}
-              disabled={isChecked || userOrder.length === 0}
+              disabled={isChecked || slots.every(s => s === null)}
               className="px-4 py-2 text-white bg-blue-600 rounded disabled:opacity-50"
             >
               Проверить
             </button>
             <button
               onClick={handleReset}
-              disabled={userOrder.length === 0}
+              disabled={slots.every(s => s === null)}
               className="px-4 py-2 text-white bg-gray-400 rounded disabled:opacity-50"
             >
               Сбросить
             </button>
           </div>
-          <DragPreview />
         </>
       )}
     </div>
