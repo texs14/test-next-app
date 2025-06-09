@@ -97,6 +97,7 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
 
     setShuffledTokens(newList);
     setSlots(newSlots);
+
     setFeedback(null);
   };
 

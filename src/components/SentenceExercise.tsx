@@ -95,6 +95,7 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
     setIsChecked(false);
   };
 
+
   const handleCheck = () => {
     const assembled = slots.map(s => s?.text || '').join('');
     const isCorrect = sentence.rightAnswers.includes(assembled);
