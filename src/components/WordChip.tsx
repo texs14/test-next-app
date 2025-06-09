@@ -49,6 +49,9 @@ export const WordChip: React.FC<WordChipProps> = ({
       onClick={() => {
         if (!isPlaced && onClick) onClick();
       }}
+      onClick={() => {
+        if (!isPlaced && onClick) onClick();
+      }}
       data-interactive="true"
     >
       {word}
