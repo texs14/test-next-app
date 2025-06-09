@@ -9,12 +9,12 @@ export default function Nav() {
   if (!user) return null
 
   return (
-    <nav className="flex items-center justify-center gap-4">
-      <Link href="/">Домой</Link>
+    <nav className="flex items-center justify-center gap-4 mt-3">
+      <Link href="/" className='ml-auto'>Домой</Link>
       <Link href="/videos">Видео</Link>
       <Link href="/exercises">Упражнения</Link>
       <Link href="/upload">Загрузить видео</Link>
-      <UserMenu />
+      <UserMenu classes='ml-auto mr-6'/>
     </nav>
   )
 }
