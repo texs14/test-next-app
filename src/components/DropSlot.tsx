@@ -1,19 +1,27 @@
 // src/components/DropSlot.tsx
 import React, { DragEvent, useCallback } from 'react';
+import { WordChip } from './WordChip';
 const cx = (...classes: Array<string | undefined | false>) =>
   classes.filter(Boolean).join(' ');
 
+interface TokenData {
+  id: string;
+  text: string;
+}
+
 interface DropSlotProps {
   slotIndex: number;
-  placedWordText: string;
+  placedWord: TokenData | null;
   onDropWord: (slotIdx: number, wordId: string) => void;
+  onDragStart: (ev: DragEvent<HTMLDivElement>, id: string) => void;
   isCorrect?: boolean; // для подсветки: true / false / undefined
 }
 
 export const DropSlot: React.FC<DropSlotProps> = ({
   slotIndex,
-  placedWordText,
+  placedWord,
   onDropWord,
+  onDragStart,
   isCorrect,
 }) => {
   // Делаем слот реагирующим на drop
@@ -53,7 +61,17 @@ export const DropSlot: React.FC<DropSlotProps> = ({
         'rounded',
       )}
     >
-      {placedWordText || <span className="text-gray-400">…</span>}
+      {placedWord ? (
+        <WordChip
+          word={placedWord.text}
+          id={placedWord.id}
+          onDragStart={onDragStart}
+          isPlaced={true}
+          isCorrect={isCorrect}
+        />
+      ) : (
+        <span className="text-gray-400">…</span>
+      )}
     </div>
   );
 };

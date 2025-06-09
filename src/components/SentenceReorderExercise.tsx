@@ -67,20 +67,38 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
   };
 
   const onDropWord = (slotIdx: number, wordId: string) => {
+    let dragged: TokenState | undefined;
+
     setShuffledTokens(prev => {
       const idx = prev.findIndex(w => w.id === wordId);
-      if (idx === -1) return prev;
-      const word = prev[idx];
-      const remaining = prev.filter((_, i) => i !== idx);
-      setSlots(sPrev => {
-        const updated = [...sPrev];
-        const replaced = updated[slotIdx];
-        updated[slotIdx] = word;
-        if (replaced) remaining.push(replaced);
-        return updated;
-      });
-      return remaining;
+      if (idx !== -1) {
+        dragged = prev[idx];
+        return prev.filter((_, i) => i !== idx);
+      }
+      return prev;
     });
+
+    setSlots(prev => {
+      const updated = [...prev];
+
+      if (!dragged) {
+        const fromIdx = prev.findIndex(t => t?.id === wordId);
+        if (fromIdx !== -1) {
+          dragged = prev[fromIdx] || undefined;
+          updated[fromIdx] = null;
+        }
+      }
+
+      if (!dragged) return prev;
+
+      const replaced = updated[slotIdx];
+      updated[slotIdx] = dragged;
+      if (replaced) {
+        setShuffledTokens(sPrev => [...sPrev, replaced]);
+      }
+      return updated;
+    });
+
     setFeedback(null);
   };
 
@@ -150,8 +168,9 @@ export default function SentenceReorderExercise({ data }: SentenceReorderExercis
             <DropSlot
               key={idx}
               slotIndex={idx}
-              placedWordText={slot?.text || ''}
+              placedWord={slot}
               onDropWord={onDropWord}
+              onDragStart={onDragStart}
               isCorrect={feedback ? feedback[idx] : undefined}
             />
           ))}
