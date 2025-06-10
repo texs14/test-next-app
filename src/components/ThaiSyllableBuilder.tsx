@@ -245,9 +245,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Слог {index + 1}: {data.syllable}</h3>
       {error && <p className="text-red-600">{error}</p>}
-      <div className="grid grid-cols-4 grid-rows-4 gap-2 justify-items-center">
+      <div className="grid grid-cols-4 grid-rows-4 gap-2 justify-items-center w-[270px]">
         <div
-          className={`col-start-2 row-start-1 transition-opacity ${visible[SLOT_TOP] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className={`col-start-2 row-start-2 transition-opacity ${visible[SLOT_TOP] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
           <DropSlot
             slotIndex={SLOT_TOP}
@@ -260,7 +260,7 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
           />
         </div>
         <div
-          className={`col-start-2 row-start-2 transition-opacity ${visible[SLOT_TOP2] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className={`col-start-2 row-start-1 transition-opacity ${visible[SLOT_TOP2] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
           <DropSlot
             slotIndex={SLOT_TOP2}
