@@ -18,6 +18,7 @@ interface WordChipProps {
   onClick?: () => void;
   isPlaced: boolean; // true, если слово уже помещено в “слот”
   isCorrect?: boolean; // undefined (не проверяли), true (правильно), false (неправильно)
+  isActive?: boolean;
 }
 
 export const WordChip: React.FC<WordChipProps> = ({
@@ -27,6 +28,7 @@ export const WordChip: React.FC<WordChipProps> = ({
   onClick,
   isPlaced,
   isCorrect,
+  isActive,
 }) => {
   // Определяем класс для цвета фона:
   //  - если isCorrect === true → зелёный фон
@@ -44,6 +46,7 @@ export const WordChip: React.FC<WordChipProps> = ({
     <div
       className={cx(base, statusClass, {
         'shadow-md': isPlaced,
+        'ring-2 ring-blue-500': isActive,
       })}
       draggable
       onDragStart={e => {

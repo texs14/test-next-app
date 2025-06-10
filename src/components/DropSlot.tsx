@@ -15,6 +15,8 @@ interface DropSlotProps {
   onDropWord: (slotIdx: number, wordId: string) => void;
   onDragStart: (ev: DragEvent<HTMLDivElement>, id: string) => void;
   isCorrect?: boolean; // для подсветки: true / false / undefined
+  onClick?: () => void;
+  isActive?: boolean;
 }
 
 export const DropSlot: React.FC<DropSlotProps> = ({
@@ -23,6 +25,8 @@ export const DropSlot: React.FC<DropSlotProps> = ({
   onDropWord,
   onDragStart,
   isCorrect,
+  onClick,
+  isActive,
 }) => {
   // Делаем слот реагирующим на drop
   const handleDragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
@@ -55,10 +59,14 @@ export const DropSlot: React.FC<DropSlotProps> = ({
     <div
       onDragOver={handleDragOver}
       onDrop={handleDrop}
+      onClick={() => {
+        if (onClick) onClick();
+      }}
       className={cx(
         'min-w-[4rem] min-h-[2rem] flex items-center justify-center m-1 p-2',
         borderClass,
         'rounded',
+        isActive && 'ring-2 ring-blue-500',
       )}
     >
       {placedWord ? (
