@@ -9,6 +9,10 @@ export interface ThaiSyllableData {
     sound: string;
     letter: string;
     length: string;
+    letters?:{
+      position: string;
+      letter: string;
+    }[]
     position: string[];
   };
   final_consonant?: { sound: string; letter: string } | null;
@@ -183,7 +187,7 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Слог {index + 1}: {data.syllable}</h3>
       {error && <p className="text-red-600">{error}</p>}
-      <div className="grid grid-cols-4 grid-rows-4 gap-2 justify-items-center">
+      <div className="grid grid-cols-4 grid-rows-4 gap-2 justify-items-center w-[270px]">
         <div className="col-start-2 row-start-1">
           <DropSlot
             slotIndex={SLOT_TOP}

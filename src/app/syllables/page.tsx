@@ -23,7 +23,21 @@ const data: ThaiSyllableData[] = [
     initial_consonant: { sound: "pr", letter: "ปร" },
     vowel: {
       sound: "ia",
-      letter: "เ◌ี้ย",
+      letter: "เ◌ีย",
+      letters: [
+        {
+          position: "above",
+          letter: '◌ี'
+        },
+        {
+          position: "right",
+          letter: '◌ย'
+        },
+        {
+          position: "left",
+          letter: 'เ◌'
+        }
+      ],
       length: "long",
       position: ["left", "above", "right"],
     },
