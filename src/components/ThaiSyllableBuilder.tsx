@@ -96,6 +96,7 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
     return v;
   });
 
+
   useEffect(() => {
     const tks = data.letters.map((l, idx) => ({ id: `${index}-${idx}`, text: l }));
     setTokens(tks);
@@ -108,6 +109,7 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
     const v = Array(SLOT_COUNT).fill(false);
     v[SLOT_CENTER] = true;
     setVisible(v);
+
   }, [data, index]);
 
   const onDragStart = (e: DragEvent<HTMLDivElement>, id: string) => {

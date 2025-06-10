@@ -13,6 +13,7 @@ export default function Nav() {
       <Link href="/" className='ml-auto'>Домой</Link>
       <Link href="/videos">Видео</Link>
       <Link href="/exercises">Упражнения</Link>
+      <Link href="/syllables">Собираем слоги</Link>
       <Link href="/upload">Загрузить видео</Link>
       <UserMenu classes='ml-auto mr-6'/>
     </nav>
