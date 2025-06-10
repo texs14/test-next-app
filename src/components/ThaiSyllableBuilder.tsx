@@ -9,10 +9,10 @@ export interface ThaiSyllableData {
     sound: string;
     letter: string;
     length: string;
-    letters?:{
+    letters?: {
       position: string;
       letter: string;
-    }[]
+    }[];
     position: string[];
   };
   final_consonant?: { sound: string; letter: string } | null;
@@ -45,25 +45,37 @@ function computeExpected(data: ThaiSyllableData): (string | null)[] {
   const res: (string | null)[] = Array(SLOT_COUNT).fill(null);
   res[SLOT_CENTER] = data.initial_consonant.letter;
 
-  const pos = data.vowel.position;
-  let main: string | null = null;
-  if (pos.includes('above')) main = 'above';
-  else if (pos.includes('left')) main = 'left';
-  else if (pos.includes('right')) main = 'right';
-  else if (pos.includes('below')) main = 'below';
+  const vowelParts = data.vowel.letters ?? [{ position: data.vowel.position[0], letter: data.vowel.letter }];
 
-  if (main === 'above') {
-    res[SLOT_TOP] = data.vowel.letter;
-    if (data.tone_mark) res[SLOT_TOP2] = data.tone_mark;
-  } else {
-    if (data.tone_mark) res[SLOT_TOP] = data.tone_mark;
-    if (main === 'left') res[SLOT_LEFT] = data.vowel.letter;
-    else if (main === 'right') res[SLOT_RIGHT] = data.vowel.letter;
-    else if (main === 'below') res[SLOT_BOTTOM] = data.vowel.letter;
+  let hasAbove = false;
+  let hasRight = false;
+
+  for (const part of vowelParts) {
+    switch (part.position) {
+      case 'above':
+        res[SLOT_TOP] = part.letter;
+        hasAbove = true;
+        break;
+      case 'left':
+        res[SLOT_LEFT] = part.letter;
+        break;
+      case 'right':
+        res[SLOT_RIGHT] = part.letter;
+        hasRight = true;
+        break;
+      case 'below':
+        res[SLOT_BOTTOM] = part.letter;
+        break;
+    }
+  }
+
+  if (data.tone_mark) {
+    if (hasAbove) res[SLOT_TOP2] = data.tone_mark;
+    else res[SLOT_TOP] = data.tone_mark;
   }
 
   if (data.final_consonant) {
-    if (res[SLOT_RIGHT]) res[SLOT_RIGHT2] = data.final_consonant.letter;
+    if (hasRight) res[SLOT_RIGHT2] = data.final_consonant.letter;
     else res[SLOT_RIGHT] = data.final_consonant.letter;
   }
 
@@ -78,6 +90,12 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
   const [activeTokenId, setActiveTokenId] = useState<string | null>(null);
   const [activeSlot, setActiveSlot] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [visible, setVisible] = useState<boolean[]>(() => {
+    const v = Array(SLOT_COUNT).fill(false);
+    v[SLOT_CENTER] = true;
+    return v;
+  });
+
 
   useEffect(() => {
     const tks = data.letters.map((l, idx) => ({ id: `${index}-${idx}`, text: l }));
@@ -88,6 +106,10 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
     setActiveTokenId(null);
     setActiveSlot(null);
     setError(null);
+    const v = Array(SLOT_COUNT).fill(false);
+    v[SLOT_CENTER] = true;
+    setVisible(v);
+
   }, [data, index]);
 
   const onDragStart = (e: DragEvent<HTMLDivElement>, id: string) => {
@@ -125,6 +147,39 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
     setActiveSlot(null);
     setFeedback(null);
     setError(null);
+
+    if (slotIdx === SLOT_CENTER && token.text === expected[SLOT_CENTER]) {
+      setVisible(v => {
+        const n = [...v];
+        n[SLOT_LEFT] = true;
+        n[SLOT_RIGHT] = true;
+        n[SLOT_TOP] = true;
+        n[SLOT_BOTTOM] = true;
+        return n;
+      });
+    }
+    if (
+      slotIdx === SLOT_RIGHT &&
+      data.vowel.position.includes('right') &&
+      token.text === expected[SLOT_RIGHT]
+    ) {
+      setVisible(v => {
+        const n = [...v];
+        n[SLOT_RIGHT2] = true;
+        return n;
+      });
+    }
+    if (
+      slotIdx === SLOT_TOP &&
+      data.vowel.position.includes('above') &&
+      token.text === expected[SLOT_TOP]
+    ) {
+      setVisible(v => {
+        const n = [...v];
+        n[SLOT_TOP2] = true;
+        return n;
+      });
+    }
   };
 
   const onDropWord = (slotIdx: number, id: string) => {
@@ -181,14 +236,19 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
     setActiveTokenId(null);
     setActiveSlot(null);
     setError(null);
+    const v = Array(SLOT_COUNT).fill(false);
+    v[SLOT_CENTER] = true;
+    setVisible(v);
   };
 
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Слог {index + 1}: {data.syllable}</h3>
       {error && <p className="text-red-600">{error}</p>}
-      <div className="grid grid-cols-4 grid-rows-4 gap-2 justify-items-center w-[270px]">
-        <div className="col-start-2 row-start-1">
+      <div className="grid grid-cols-4 grid-rows-4 gap-2 justify-items-center">
+        <div
+          className={`col-start-2 row-start-1 transition-opacity ${visible[SLOT_TOP] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        >
           <DropSlot
             slotIndex={SLOT_TOP}
             placedWord={slots[SLOT_TOP]}
@@ -199,7 +259,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
             isCorrect={feedback ? feedback[SLOT_TOP] : undefined}
           />
         </div>
-        <div className="col-start-2 row-start-2">
+        <div
+          className={`col-start-2 row-start-2 transition-opacity ${visible[SLOT_TOP2] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        >
           <DropSlot
             slotIndex={SLOT_TOP2}
             placedWord={slots[SLOT_TOP2]}
@@ -210,7 +272,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
             isCorrect={feedback ? feedback[SLOT_TOP2] : undefined}
           />
         </div>
-        <div className="col-start-1 row-start-3">
+        <div
+          className={`col-start-1 row-start-3 transition-opacity ${visible[SLOT_LEFT] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        >
           <DropSlot
             slotIndex={SLOT_LEFT}
             placedWord={slots[SLOT_LEFT]}
@@ -221,7 +285,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
             isCorrect={feedback ? feedback[SLOT_LEFT] : undefined}
           />
         </div>
-        <div className="col-start-2 row-start-3">
+        <div
+          className={`col-start-2 row-start-3 transition-opacity ${visible[SLOT_CENTER] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        >
           <DropSlot
             slotIndex={SLOT_CENTER}
             placedWord={slots[SLOT_CENTER]}
@@ -232,7 +298,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
             isCorrect={feedback ? feedback[SLOT_CENTER] : undefined}
           />
         </div>
-        <div className="col-start-3 row-start-3">
+        <div
+          className={`col-start-3 row-start-3 transition-opacity ${visible[SLOT_RIGHT] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        >
           <DropSlot
             slotIndex={SLOT_RIGHT}
             placedWord={slots[SLOT_RIGHT]}
@@ -243,7 +311,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
             isCorrect={feedback ? feedback[SLOT_RIGHT] : undefined}
           />
         </div>
-        <div className="col-start-4 row-start-3">
+        <div
+          className={`col-start-4 row-start-3 transition-opacity ${visible[SLOT_RIGHT2] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        >
           <DropSlot
             slotIndex={SLOT_RIGHT2}
             placedWord={slots[SLOT_RIGHT2]}
@@ -254,7 +324,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
             isCorrect={feedback ? feedback[SLOT_RIGHT2] : undefined}
           />
         </div>
-        <div className="col-start-2 row-start-4">
+        <div
+          className={`col-start-2 row-start-4 transition-opacity ${visible[SLOT_BOTTOM] ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        >
           <DropSlot
             slotIndex={SLOT_BOTTOM}
             placedWord={slots[SLOT_BOTTOM]}

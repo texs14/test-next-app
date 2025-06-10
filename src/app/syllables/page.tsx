@@ -25,18 +25,9 @@ const data: ThaiSyllableData[] = [
       sound: "ia",
       letter: "เ◌ีย",
       letters: [
-        {
-          position: "above",
-          letter: '◌ี'
-        },
-        {
-          position: "right",
-          letter: '◌ย'
-        },
-        {
-          position: "left",
-          letter: 'เ◌'
-        }
+        { position: "left", letter: "เ◌" },
+        { position: "above", letter: "◌ี" },
+        { position: "right", letter: "◌ย" },
       ],
       length: "long",
       position: ["left", "above", "right"],
@@ -44,7 +35,7 @@ const data: ThaiSyllableData[] = [
     final_consonant: { sound: "w", letter: "ว" },
     tone: "falling",
     tone_mark: "◌้",
-    letters: ["ปร", "เ◌ี้ย", "◌้", "ว"],
+    letters: ["ปร", "เ◌", "◌ี", "◌ย", "◌้", "ว"],
   },
   {
     syllable: "จ้าง",

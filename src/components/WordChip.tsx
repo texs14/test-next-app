@@ -43,11 +43,11 @@ export const WordChip: React.FC<WordChipProps> = ({
         : 'bg-red-200';
 
   return (
-    <div
-      className={cx(base, statusClass, {
-        'shadow-md': isPlaced,
-        'ring-2 ring-blue-500': isActive,
-      })}
+      <div
+        className={cx(base, statusClass, {
+          'shadow-md': isPlaced,
+          'ring-2 ring-blue-500': Boolean(isActive),
+        })}
       draggable
       onDragStart={e => {
         onDragStart(e, id);
