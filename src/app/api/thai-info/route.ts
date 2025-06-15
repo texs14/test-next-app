@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 import { TranslationServiceClient } from '@google-cloud/translate'
-import { LanguageServiceClient } from '@google-cloud/language'
-import { tokenizeThaiSentence } from '@/utils/thaiTokenizer'
 
 const projectId = process.env.GOOGLE_PROJECT_ID as string
 const clientEmail = process.env.GOOGLE_CLIENT_EMAIL as string
@@ -13,18 +11,7 @@ const translateClient = new TranslationServiceClient({
   credentials: { client_email: clientEmail, private_key: privateKey },
 })
 
-const languageClient = new LanguageServiceClient({
-  projectId,
-  credentials: { client_email: clientEmail, private_key: privateKey },
-})
 
-function detectTone(word: string): string {
-  if (word.includes('่')) return 'low'
-  if (word.includes('้')) return 'falling'
-  if (word.includes('๊')) return 'high'
-  if (word.includes('๋')) return 'rising'
-  return 'mid'
-}
 
 export async function POST(req: Request) {
   try {
@@ -40,28 +27,6 @@ export async function POST(req: Request) {
       sourceLanguageCode: 'th',
     })
     const romanized = romanRes.romanizations?.[0]?.romanizedText || ''
-
-    const words = tokenizeThaiSentence(text)
-    const wordTones = words.map(w => ({ word: w, tone: detectTone(w) }))
-
-    let pos: { text: string; tag: string }[] = []
-    try {
-      // The Cloud Natural Language API does not support Thai syntax analysis.
-      // Attempting to call `analyzeSyntax` with `language: 'th'` results in
-      // a "Source language is unsupported" error. We try anyway in case the
-      // service adds support in the future, but fall back gracefully when it
-      // fails so the rest of the endpoint still works.
-      const [syntax] = await languageClient.analyzeSyntax({
-        document: { content: text, type: 'PLAIN_TEXT', language: 'th' },
-      })
-      pos = (syntax.tokens || []).map(t => ({
-        text: t.text?.content || '',
-        tag: t.partOfSpeech?.tag || '',
-      }))
-    } catch (err) {
-      console.warn('analyzeSyntax failed:', err)
-      pos = words.map(w => ({ text: w, tag: '' }))
-    }
 
     // Google Cloud Translation API requires full BCP-47 codes for some
     // languages. Using plain `zh` causes a 3 INVALID_ARGUMENT error, so we
@@ -83,8 +48,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       romanized,
-      wordTones,
-      pos,
       translations,
       examples: [],
     })
