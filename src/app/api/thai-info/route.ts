@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server'
 import { TranslationServiceClient } from '@google-cloud/translate'
 import { LanguageServiceClient } from '@google-cloud/language'
 import romanize from '@dehoist/romanize-thai'
-import thaidict from 'thaidict'
+import fs from 'fs'
+import path from 'path'
 import { tokenizeThaiSentence } from '@/utils/thaiTokenizer'
 
 const projectId = process.env.GOOGLE_PROJECT_ID as string
@@ -20,14 +21,36 @@ const languageClient = new LanguageServiceClient({
   credentials: { client_email: clientEmail, private_key: privateKey },
 })
 
-let dictReady: Promise<void> | null = null
-function ensureDict() {
-  if (!dictReady) {
-    dictReady = new Promise(resolve => {
-      thaidict.init(() => resolve())
-    })
+let thai2eng: any[] | null = null
+let eng2thai: any[] | null = null
+async function ensureDict() {
+  if (!thai2eng || !eng2thai) {
+    const pkgDir = path.dirname(require.resolve('thaidict/package.json'))
+    const [t2eData, e2tData] = await Promise.all([
+      fs.promises.readFile(path.join(pkgDir, 'data', 'thai2eng.json'), 'utf8'),
+      fs.promises.readFile(path.join(pkgDir, 'data', 'eng2thai.json'), 'utf8'),
+    ])
+    thai2eng = JSON.parse(t2eData)
+    eng2thai = JSON.parse(e2tData)
   }
-  return dictReady
+}
+
+function searchDict(term: string) {
+  if (!thai2eng || !eng2thai) return []
+  const isThai = /[ก-๙]/.test(term)
+  const regex = new RegExp(
+    '^' + term.replace(/\*/g, '.*').replace(/#/g, '(.)') + '$',
+    isThai ? '' : 'i',
+  )
+  const list = isThai ? thai2eng : eng2thai
+  const results = [] as any[]
+  for (const entry of list) {
+    if (regex.test(entry.search)) {
+      results.push(entry)
+      if (results.length >= 3) break
+    }
+  }
+  return results
 }
 
 function detectTone(word: string): string {
@@ -76,7 +99,7 @@ export async function POST(req: Request) {
       })
     )
 
-    const dictEntries = thaidict.search(text).slice(0, 3)
+    const dictEntries = searchDict(text)
     const examples: any[] = []
     for (const entry of dictEntries) {
       if (entry.sample) {
