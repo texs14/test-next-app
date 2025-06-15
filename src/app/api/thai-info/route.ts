@@ -18,7 +18,6 @@ const languageClient = new LanguageServiceClient({
   credentials: { client_email: clientEmail, private_key: privateKey },
 })
 
-
 function detectTone(word: string): string {
   if (word.includes('่')) return 'low'
   if (word.includes('้')) return 'falling'
