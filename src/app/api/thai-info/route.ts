@@ -34,27 +34,39 @@ export async function POST(req: Request) {
     }
 
     const parent = `projects/${projectId}/locations/global`
-    const [romanRes] = await translateClient.translateText({
+    const [romanRes] = await translateClient.romanizeText({
       parent,
       contents: [text],
-      mimeType: 'text/plain',
       sourceLanguageCode: 'th',
-      targetLanguageCode: 'th-Latn',
     })
-    const romanized = romanRes.translations?.[0]?.translatedText || ''
+    const romanized = romanRes.romanizations?.[0]?.romanizedText || ''
 
     const words = tokenizeThaiSentence(text)
     const wordTones = words.map(w => ({ word: w, tone: detectTone(w) }))
 
-    const [syntax] = await languageClient.analyzeSyntax({
-      document: { content: text, type: 'PLAIN_TEXT', language: 'th' },
-    })
-    const pos = (syntax.tokens || []).map(t => ({
-      text: t.text?.content || '',
-      tag: t.partOfSpeech?.tag || '',
-    }))
+    let pos: { text: string; tag: string }[] = []
+    try {
+      // The Cloud Natural Language API does not support Thai syntax analysis.
+      // Attempting to call `analyzeSyntax` with `language: 'th'` results in
+      // a "Source language is unsupported" error. We try anyway in case the
+      // service adds support in the future, but fall back gracefully when it
+      // fails so the rest of the endpoint still works.
+      const [syntax] = await languageClient.analyzeSyntax({
+        document: { content: text, type: 'PLAIN_TEXT', language: 'th' },
+      })
+      pos = (syntax.tokens || []).map(t => ({
+        text: t.text?.content || '',
+        tag: t.partOfSpeech?.tag || '',
+      }))
+    } catch (err) {
+      console.warn('analyzeSyntax failed:', err)
+      pos = words.map(w => ({ text: w, tag: '' }))
+    }
 
-    const targetLangs = ['en', 'ru', 'zh']
+    // Google Cloud Translation API requires full BCP-47 codes for some
+    // languages. Using plain `zh` causes a 3 INVALID_ARGUMENT error, so we
+    // explicitly request Simplified Chinese with `zh-CN`.
+    const targetLangs = ['en', 'ru', 'zh-CN']
     const translations: Record<string, string> = {}
     await Promise.all(
       targetLangs.map(async lang => {
