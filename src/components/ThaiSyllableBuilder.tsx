@@ -338,7 +338,7 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
           />
         </div>
       </div>
-      <div className="flex flex-wrap gap-2 border border-dashed rounded p-2 min-h-[48px]">
+      <div className="flex flex-wrap gap-2 border border-dashed rounded p-2 min-h-[48px] ">
         {tokens.map(tok => (
           <WordChip
             key={tok.id}
@@ -348,6 +348,7 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
             onClick={() => handleChipClick(tok.id)}
             isPlaced={false}
             isActive={activeTokenId === tok.id}
+            classes={'text-[26px]'}
           />
         ))}
       </div>

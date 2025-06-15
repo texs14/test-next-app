@@ -19,6 +19,7 @@ interface WordChipProps {
   isPlaced: boolean; // true, если слово уже помещено в “слот”
   isCorrect?: boolean; // undefined (не проверяли), true (правильно), false (неправильно)
   isActive?: boolean;
+  classes?: string;
 }
 
 export const WordChip: React.FC<WordChipProps> = ({
@@ -29,12 +30,13 @@ export const WordChip: React.FC<WordChipProps> = ({
   isPlaced,
   isCorrect,
   isActive,
+  classes
 }) => {
   // Определяем класс для цвета фона:
   //  - если isCorrect === true → зелёный фон
   //  - если isCorrect === false → светло-красный
   //  - иначе обычный серый
-  const base = 'px-3 py-1 rounded cursor-grab select-none';
+  const base = 'px-3 py-1 rounded cursor-grab select-none' + ' ' + classes || '';
   const statusClass =
     isCorrect === undefined
       ? 'bg-gray-200'

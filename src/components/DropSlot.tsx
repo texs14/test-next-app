@@ -63,7 +63,7 @@ export const DropSlot: React.FC<DropSlotProps> = ({
         if (onClick) onClick();
       }}
       className={cx(
-        'min-w-[4rem] min-h-[2rem] flex items-center justify-center m-1 p-2',
+        'min-w-[4rem] min-h-[2rem] flex items-center justify-center m-1 p-2 text-[26px]',
         borderClass,
         'rounded',
         isActive && 'ring-2 ring-blue-500',
