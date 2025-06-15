@@ -54,7 +54,10 @@ export async function POST(req: Request) {
       tag: t.partOfSpeech?.tag || '',
     }))
 
-    const targetLangs = ['en', 'ru', 'zh']
+    // Google Cloud Translation API requires full BCP-47 codes for some
+    // languages. Using plain `zh` causes a 3 INVALID_ARGUMENT error, so we
+    // explicitly request Simplified Chinese with `zh-CN`.
+    const targetLangs = ['en', 'ru', 'zh-CN']
     const translations: Record<string, string> = {}
     await Promise.all(
       targetLangs.map(async lang => {
