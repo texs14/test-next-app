@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dehoist/romanize-thai": "^1.0.0",
+    "@google-cloud/language": "^7.1.0",
     "@google-cloud/speech": "^5.5.0",
     "@google-cloud/storage": "^7.16.0",
     "@google-cloud/translate": "^8.0.4",
@@ -21,6 +23,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.0.0",
     "request": "^2.88.2",
+    "thaidict": "^0.0.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
