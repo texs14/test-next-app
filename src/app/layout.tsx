@@ -4,6 +4,8 @@ import DragDropProvider from './DragDropProvider'
 import { AuthProvider } from '@/contexts/AuthContext'
 import ProtectedLayout from '@/components/ProtectedLayout'
 import Nav from '@/components/Nav'
+import { TooltipProvider } from '@/contexts/TooltipContext'
+import { WordTooltip } from '@/components/WordTooltip'
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,10 +22,13 @@ export default function RootLayout({
       <body className="antialiased flex-col items-center justify-center">
         <AuthProvider>
           <ProtectedLayout>
-            <DragDropProvider>
-              <Nav />
-              {children}
-            </DragDropProvider>
+            <TooltipProvider>
+              <DragDropProvider>
+                <Nav />
+                {children}
+                <WordTooltip />
+              </DragDropProvider>
+            </TooltipProvider>
           </ProtectedLayout>
         </AuthProvider>
       </body>
