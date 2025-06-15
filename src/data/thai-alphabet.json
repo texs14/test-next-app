@@ -1,0 +1,703 @@
+{
+  "ก": {
+    "sound": "k",
+    "type": "consonant",
+    "endSound": "k",
+    "typeEnd": "dead",
+    "classs": "mid"
+  },
+  "ข": {
+    "sound": "kh",
+    "type": "consonant",
+    "endSound": "k",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ฃ": {
+    "sound": "kh",
+    "type": "consonant",
+    "endSound": "k",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ค": {
+    "sound": "kh",
+    "type": "consonant",
+    "endSound": "k",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ฅ": {
+    "sound": "kh",
+    "type": "consonant",
+    "endSound": "k",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ฆ": {
+    "sound": "kh",
+    "type": "consonant",
+    "endSound": "k",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ง": {
+    "sound": "ng",
+    "type": "consonant",
+    "endSound": "ng",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "จ": {
+    "sound": "ch",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "mid"
+  },
+  "ฉ": {
+    "sound": "ch",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ช": {
+    "sound": "ch",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ซ": {
+    "sound": "s",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ฌ": {
+    "sound": "ch",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ญ": {
+    "sound": "y",
+    "type": "consonant",
+    "endSound": "n",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "ฎ": {
+    "sound": "d",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "mid"
+  },
+  "ฏ": {
+    "sound": "t",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "mid"
+  },
+  "ฐ": {
+    "sound": "th",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ฑ": {
+    "sound": "th",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ฒ": {
+    "sound": "th",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ณ": {
+    "sound": "n",
+    "type": "consonant",
+    "endSound": "n",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "ด": {
+    "sound": "d",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "mid"
+  },
+  "ต": {
+    "sound": "t",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "mid"
+  },
+  "ถ": {
+    "sound": "th",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ท": {
+    "sound": "th",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ธ": {
+    "sound": "th",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "น": {
+    "sound": "n",
+    "type": "consonant",
+    "endSound": "n",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "บ": {
+    "sound": "b",
+    "type": "consonant",
+    "endSound": "p",
+    "typeEnd": "dead",
+    "classs": "mid"
+  },
+  "ป": {
+    "sound": "p",
+    "type": "consonant",
+    "endSound": "p",
+    "typeEnd": "dead",
+    "classs": "mid"
+  },
+  "ผ": {
+    "sound": "ph",
+    "type": "consonant",
+    "endSound": "p",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ฝ": {
+    "sound": "f",
+    "type": "consonant",
+    "endSound": "p",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "พ": {
+    "sound": "ph",
+    "type": "consonant",
+    "endSound": "p",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ฟ": {
+    "sound": "f",
+    "type": "consonant",
+    "endSound": "p",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ภ": {
+    "sound": "ph",
+    "type": "consonant",
+    "endSound": "p",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ม": {
+    "sound": "m",
+    "type": "consonant",
+    "endSound": "m",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "ย": {
+    "sound": "y",
+    "type": "consonant",
+    "endSound": "y",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "ร": {
+    "sound": "r",
+    "type": "consonant",
+    "endSound": "n",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "ล": {
+    "sound": "l",
+    "type": "consonant",
+    "endSound": "n",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "ว": {
+    "sound": "w",
+    "type": "consonant",
+    "endSound": "w",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "ศ": {
+    "sound": "s",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ษ": {
+    "sound": "s",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ส": {
+    "sound": "s",
+    "type": "consonant",
+    "endSound": "t",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ห": {
+    "sound": "h",
+    "type": "consonant",
+    "endSound": "h",
+    "typeEnd": "dead",
+    "classs": "high"
+  },
+  "ฬ": {
+    "sound": "l",
+    "type": "consonant",
+    "endSound": "n",
+    "typeEnd": "live",
+    "classs": "low"
+  },
+  "อ": {
+    "sound": "o",
+    "type": "consonant",
+    "endSound": "o",
+    "typeEnd": "live",
+    "classs": "mid"
+  },
+  "ฮ": {
+    "sound": "h",
+    "type": "consonant",
+    "endSound": "h",
+    "typeEnd": "dead",
+    "classs": "low"
+  },
+  "ะ": {
+    "sound": "a",
+    "type": "short-vowel",
+    "position": "right"
+  },
+  "า": {
+    "sound": "aa",
+    "type": "long-vowel",
+    "position": "right"
+  },
+  "ิ": {
+    "sound": "i",
+    "type": "short-vowel",
+    "position": "above"
+  },
+  "ี": {
+    "sound": "ii",
+    "type": "long-vowel",
+    "position": "above"
+  },
+  "ึ": {
+    "sound": "ue",
+    "type": "short-vowel",
+    "position": "above"
+  },
+  "ื": {
+    "sound": "uee",
+    "type": "long-vowel",
+    "position": "above"
+  },
+  "ุ": {
+    "sound": "u",
+    "type": "short-vowel",
+    "position": "below"
+  },
+  "ู": {
+    "sound": "uu",
+    "type": "long-vowel",
+    "position": "below"
+  },
+  "เ◌ะ": {
+    "sound": "e",
+    "type": "short-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "เ"
+      },
+      {
+        "position": "right",
+        "letter": "ะ"
+      }
+    ],
+    "position": [
+      "left",
+      "right"
+    ]
+  },
+  "เ◌": {
+    "sound": "ee",
+    "type": "long-vowel",
+    "position": "left"
+  },
+  "แ◌ะ": {
+    "sound": "ae",
+    "type": "short-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "แ"
+      },
+      {
+        "position": "right",
+        "letter": "ะ"
+      }
+    ],
+    "position": [
+      "left",
+      "right"
+    ]
+  },
+  "แ◌": {
+    "sound": "aae",
+    "type": "long-vowel",
+    "position": "left"
+  },
+  "โ◌ะ": {
+    "sound": "o",
+    "type": "short-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "โ"
+      },
+      {
+        "position": "right",
+        "letter": "ะ"
+      }
+    ],
+    "position": [
+      "left",
+      "right"
+    ]
+  },
+  "โ◌": {
+    "sound": "oo",
+    "type": "long-vowel",
+    "position": "left"
+  },
+  "เ◌าะ": {
+    "sound": "aw",
+    "type": "short-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "เ"
+      },
+      {
+        "position": "right",
+        "letter": "า"
+      },
+      {
+        "position": "right",
+        "letter": "ะ"
+      }
+    ],
+    "position": [
+      "left",
+      "right"
+    ]
+  },
+  "◌อ": {
+    "sound": "aw",
+    "type": "long-vowel",
+    "position": "right"
+  },
+  "เ◌อะ": {
+    "sound": "oe",
+    "type": "short-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "เ"
+      },
+      {
+        "position": "right",
+        "letter": "อ"
+      },
+      {
+        "position": "right",
+        "letter": "ะ"
+      }
+    ],
+    "position": [
+      "left",
+      "right"
+    ]
+  },
+  "เ◌อ": {
+    "sound": "oe",
+    "type": "long-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "เ"
+      },
+      {
+        "position": "right",
+        "letter": "อ"
+      }
+    ],
+    "position": [
+      "left",
+      "right"
+    ]
+  },
+  "เ◌ียะ": {
+    "sound": "ia",
+    "type": "short-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "เ"
+      },
+      {
+        "position": "above",
+        "letter": "ี"
+      },
+      {
+        "position": "right",
+        "letter": "ย"
+      },
+      {
+        "position": "right",
+        "letter": "ะ"
+      }
+    ],
+    "position": [
+      "left",
+      "above",
+      "right"
+    ]
+  },
+  "เ◌ีย": {
+    "sound": "ia",
+    "type": "long-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "เ"
+      },
+      {
+        "position": "above",
+        "letter": "ี"
+      },
+      {
+        "position": "right",
+        "letter": "ย"
+      }
+    ],
+    "position": [
+      "left",
+      "above",
+      "right"
+    ]
+  },
+  "เ◌ือะ": {
+    "sound": "uea",
+    "type": "short-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "เ"
+      },
+      {
+        "position": "above",
+        "letter": "ื"
+      },
+      {
+        "position": "right",
+        "letter": "อ"
+      },
+      {
+        "position": "right",
+        "letter": "ะ"
+      }
+    ],
+    "position": [
+      "left",
+      "above",
+      "right"
+    ]
+  },
+  "เ◌ือ": {
+    "sound": "uea",
+    "type": "long-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "เ"
+      },
+      {
+        "position": "above",
+        "letter": "ื"
+      },
+      {
+        "position": "right",
+        "letter": "อ"
+      }
+    ],
+    "position": [
+      "left",
+      "above",
+      "right"
+    ]
+  },
+  "◌ัวะ": {
+    "sound": "ua",
+    "type": "short-vowel",
+    "letters": [
+      {
+        "position": "above",
+        "letter": "ั"
+      },
+      {
+        "position": "right",
+        "letter": "ว"
+      },
+      {
+        "position": "right",
+        "letter": "ะ"
+      }
+    ],
+    "position": [
+      "above",
+      "right"
+    ]
+  },
+  "◌ัว": {
+    "sound": "ua",
+    "type": "long-vowel",
+    "letters": [
+      {
+        "position": "above",
+        "letter": "ั"
+      },
+      {
+        "position": "right",
+        "letter": "ว"
+      }
+    ],
+    "position": [
+      "above",
+      "right"
+    ]
+  },
+  "◌ำ": {
+    "sound": "am",
+    "type": "long-vowel",
+    "position": "right"
+  },
+  "ไ◌": {
+    "sound": "ai",
+    "type": "long-vowel",
+    "position": "left"
+  },
+  "ใ◌": {
+    "sound": "ai",
+    "type": "long-vowel",
+    "position": "left"
+  },
+  "เ◌า": {
+    "sound": "ao",
+    "type": "long-vowel",
+    "letters": [
+      {
+        "position": "left",
+        "letter": "เ"
+      },
+      {
+        "position": "right",
+        "letter": "า"
+      }
+    ],
+    "position": [
+      "left",
+      "right"
+    ]
+  },
+  "ฤ": {
+    "sound": "rue",
+    "type": "short-vowel",
+    "position": "right"
+  },
+  "ฤๅ": {
+    "sound": "rue",
+    "type": "long-vowel",
+    "letters": [
+      {
+        "position": "right",
+        "letter": "ฤ"
+      },
+      {
+        "position": "right",
+        "letter": "ๅ"
+      }
+    ],
+    "position": [
+      "right"
+    ]
+  },
+  "ฦ": {
+    "sound": "lue",
+    "type": "short-vowel",
+    "position": "right"
+  },
+  "ฦๅ": {
+    "sound": "lue",
+    "type": "long-vowel",
+    "letters": [
+      {
+        "position": "right",
+        "letter": "ฦ"
+      },
+      {
+        "position": "right",
+        "letter": "ๅ"
+      }
+    ],
+    "position": [
+      "right"
+    ]
+  }
+}
