@@ -1,3 +1,5 @@
+'use client'
+
 // src/components/WordTooltip.tsx
 import React, { useEffect, useState, useRef, useMemo } from 'react'
 import { useTooltipContext } from '../contexts/TooltipContext'
