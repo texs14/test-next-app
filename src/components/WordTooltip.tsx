@@ -1,12 +1,18 @@
 // src/components/WordTooltip.tsx
-import React, { useEffect, useState, useRef, useMemo } from 'react';
-// import type { Language } from '@/types/index.types';
-import { useTooltipContext } from '../contexts/TooltipContext';
+import React, { useEffect, useState, useRef, useMemo } from 'react'
+import { useTooltipContext } from '../contexts/TooltipContext'
 
-interface WordInfo {
-  translation: string;
-  examples: string[];
+interface ThaiInfo {
+  romanized: string
+  wordTones: { word: string; tone: string }[]
+  pos: { text: string; tag: string }[]
+  translations: Record<string, string>
+  examples: { text: string; translations: Record<string, string> }[]
 }
+
+type WordInfo =
+  | { type: 'th'; data: ThaiInfo }
+  | { type: 'en'; translation: string; examples: string[] }
 
 export function WordTooltip() {
   const { tooltip, hideTooltip } = useTooltipContext();
@@ -36,16 +42,15 @@ export function WordTooltip() {
     (async () => {
       try {
         if (originalLang === 'th') {
-          const res = await fetch(
-            `https://longdo-json.herokuapp.com/?dict=longdo&word=${encodeURIComponent(word)}`,
-          );
-          if (!res.ok) throw new Error('Ошибка при получении Longdo-данных');
-          const data = await res.json();
-          const meaning = data.meanings?.[0] || {};
-          const translation = meaning.definition || '—';
-          const examples = meaning.examples || [];
+          const res = await fetch('/api/thai-info', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: word }),
+          })
+          if (!res.ok) throw new Error('Ошибка при получении данных')
+          const data: ThaiInfo = await res.json()
           if (!cancelled) {
-            setWordInfo({ translation, examples });
+            setWordInfo({ type: 'th', data })
           }
         } else {
           const res = await fetch(
@@ -59,12 +64,12 @@ export function WordTooltip() {
           const translation = defObj.definition || '—';
           const examples = defObj.example ? [defObj.example] : [];
           if (!cancelled) {
-            setWordInfo({ translation, examples });
+            setWordInfo({ type: 'en', translation, examples });
           }
         }
       } catch {
         if (!cancelled) {
-          setWordInfo({ translation: 'Не удалось получить', examples: [] });
+          setWordInfo({ type: 'en', translation: 'Не удалось получить', examples: [] });
         }
       } finally {
         if (!cancelled) {
@@ -122,21 +127,84 @@ export function WordTooltip() {
       {loading ? (
         <p className="mt-2 text-sm">Загрузка...</p>
       ) : wordInfo ? (
-        <>
-          <p className="mt-2 text-sm">
-            <strong>Перевод:</strong> {wordInfo.translation}
-          </p>
-          {wordInfo.examples.length > 0 && (
-            <div className="mt-2 text-sm">
-              <strong>Примеры:</strong>
-              <ul className="ml-4 list-disc list-inside">
-                {wordInfo.examples.map((ex, i) => (
-                  <li key={i}>{ex}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </>
+        wordInfo.type === 'th' ? (
+          <div className="mt-2 text-sm space-y-2">
+            <p>
+              <strong>Romanization:</strong> {wordInfo.data.romanized}
+            </p>
+            {Object.keys(wordInfo.data.translations).length > 0 && (
+              <div>
+                <strong>Translations:</strong>
+                <ul className="ml-4 list-disc list-inside">
+                  {Object.entries(wordInfo.data.translations).map(([lang, text]) => (
+                    <li key={lang}>
+                      {lang}: {text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {wordInfo.data.wordTones.length > 0 && (
+              <div>
+                <strong>Tones:</strong>
+                <ul className="ml-4 list-disc list-inside">
+                  {wordInfo.data.wordTones.map((wt, i) => (
+                    <li key={i}>
+                      {wt.word} - {wt.tone}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {wordInfo.data.pos.length > 0 && (
+              <div>
+                <strong>POS:</strong>
+                <ul className="ml-4 list-disc list-inside">
+                  {wordInfo.data.pos.map((p, i) => (
+                    <li key={i}>
+                      {p.text} - {p.tag}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {wordInfo.data.examples.length > 0 && (
+              <div>
+                <strong>Examples:</strong>
+                <ul className="ml-4 list-disc list-inside">
+                  {wordInfo.data.examples.map((ex, i) => (
+                    <li key={i}>
+                      {ex.text}
+                      <ul className="ml-4 list-disc list-inside">
+                        {Object.entries(ex.translations).map(([lang, txt]) => (
+                          <li key={lang}>
+                            {lang}: {txt}
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <p className="mt-2 text-sm">
+              <strong>Перевод:</strong> {wordInfo.translation}
+            </p>
+            {wordInfo.examples.length > 0 && (
+              <div className="mt-2 text-sm">
+                <strong>Примеры:</strong>
+                <ul className="ml-4 list-disc list-inside">
+                  {wordInfo.examples.map((ex, i) => (
+                    <li key={i}>{ex}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </>
+        )
       ) : (
         <p className="mt-2 text-sm">Нет данных</p>
       )}
