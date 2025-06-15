@@ -34,14 +34,12 @@ export async function POST(req: Request) {
     }
 
     const parent = `projects/${projectId}/locations/global`
-    const [romanRes] = await translateClient.translateText({
+    const [romanRes] = await translateClient.romanizeText({
       parent,
       contents: [text],
-      mimeType: 'text/plain',
       sourceLanguageCode: 'th',
-      targetLanguageCode: 'th-Latn',
     })
-    const romanized = romanRes.translations?.[0]?.translatedText || ''
+    const romanized = romanRes.romanizations?.[0]?.romanizedText || ''
 
     const words = tokenizeThaiSentence(text)
     const wordTones = words.map(w => ({ word: w, tone: detectTone(w) }))
