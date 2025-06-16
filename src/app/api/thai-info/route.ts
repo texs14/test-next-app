@@ -21,12 +21,18 @@ export async function POST(req: Request) {
     }
 
     const parent = `projects/${projectId}/locations/global`
-    const [romanRes] = await translateClient.romanizeText({
-      parent,
-      contents: [text],
-      sourceLanguageCode: 'th',
-    })
-    const romanized = romanRes.romanizations?.[0]?.romanizedText || ''
+    let romanized = ''
+    try {
+      const [romanRes] = await translateClient.romanizeText({
+        parent,
+        contents: [text],
+        sourceLanguageCode: 'th',
+      })
+      romanized = romanRes.romanizations?.[0]?.romanizedText || ''
+    } catch (err) {
+      console.warn('romanizeText failed:', err)
+      romanized = ''
+    }
 
     // Google Cloud Translation API requires full BCP-47 codes for some
     // languages. Using plain `zh` causes a 3 INVALID_ARGUMENT error, so we

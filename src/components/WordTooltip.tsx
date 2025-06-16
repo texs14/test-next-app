@@ -6,8 +6,8 @@ import { useTooltipContext } from '../contexts/TooltipContext'
 
 interface ThaiInfo {
   romanized: string
-  wordTones: { word: string; tone: string }[]
-  pos: { text: string; tag: string }[]
+  wordTones?: { word: string; tone: string }[]
+  pos?: { text: string; tag: string }[]
   translations: Record<string, string>
   examples: { text: string; translations: Record<string, string> }[]
 }
@@ -146,7 +146,7 @@ export function WordTooltip() {
                 </ul>
               </div>
             )}
-            {wordInfo.data.wordTones.length > 0 && (
+            {wordInfo.data.wordTones && wordInfo.data.wordTones.length > 0 && (
               <div>
                 <strong>Tones:</strong>
                 <ul className="ml-4 list-disc list-inside">
@@ -158,7 +158,7 @@ export function WordTooltip() {
                 </ul>
               </div>
             )}
-            {wordInfo.data.pos.length > 0 && (
+            {wordInfo.data.pos && wordInfo.data.pos.length > 0 && (
               <div>
                 <strong>POS:</strong>
                 <ul className="ml-4 list-disc list-inside">
