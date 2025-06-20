@@ -1,0 +1,52 @@
+{
+  "tones": {
+    "mid": {
+      "default": ["middle_consonant"],
+      "exceptions": []
+    },
+    "low": {
+      "default": ["low_consonant", "long_vowel", "no_tone_mark"],
+      "exceptions": ["word_specific_exceptions"]
+    },
+    "falling": {
+      "default": ["high_consonant", "long_vowel", "no_tone_mark"],
+      "exceptions": []
+    },
+    "high": {
+      "default": ["low_consonant", "short_vowel", "no_tone_mark", "ending_with_stop_consonant"],
+      "exceptions": []
+    },
+    "rising": {
+      "default": ["low_consonant", "long_vowel", "tone_mark_2"],
+      "exceptions": []
+    }
+  },
+  "tone_marks": {
+    "mai_ek": {
+      "applies_to": ["middle_consonant", "low_consonant"],
+      "resulting_tone": "low"
+    },
+    "mai_tho": {
+      "applies_to": ["middle_consonant", "low_consonant"],
+      "resulting_tone": "falling"
+    },
+    "mai_tri": {
+      "applies_to": ["middle_consonant"],
+      "resulting_tone": "high"
+    },
+    "mai_chattawa": {
+      "applies_to": ["middle_consonant"],
+      "resulting_tone": "rising"
+    }
+  },
+  "exceptions": [
+    {
+      "pattern": "special_combination_1",
+      "resulting_tone": "high"
+    },
+    {
+      "pattern": "special_combination_2",
+      "resulting_tone": "low"
+    }
+  ]
+}
