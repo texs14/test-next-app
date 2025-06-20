@@ -1,0 +1,68 @@
+{
+  "exceptions": [
+    {
+      "pattern": "รร",
+      "when": "no final consonant follows",
+      "soundEn": "an",
+      "soundRu": "ан",
+      "note": "–รร без конечного согласного читается как 'an'"
+    },
+    {
+      "pattern": "รร",
+      "when": "followed by final consonant",
+      "soundEn": "a",
+      "soundRu": "а",
+      "note": "–รร+консонант: обычное 'a'"
+    },
+    {
+      "pattern": "ร.+อ?",
+      "when": "ends with ร + implicit vowel",
+      "soundEn": "o",
+      "soundRu": "о",
+      "note": "р на конце слога читается как 'o'"
+    },
+    {
+      "pattern": "กร",
+      "soundEn": "kon",
+      "soundRu": "кон",
+      "note": "часто 'กร' в начале читается как 'kon', примеры из списка – กร, กรณี"
+    },
+    {
+      "pattern": "จร",
+      "soundEn": "jon",
+      "soundRu": "йон",
+      "note": "исключение 'จร' ≈ йон"
+    },
+    {
+      "pattern": "บริ",
+      "soundEn": "bo-ri",
+      "soundRu": "бо‑ри",
+      "note": "основа 'บริ' всегда читается 'бо‑ри' (префикс)"
+    },
+    {
+      "pattern": "บร.+",
+      "soundEn": "bor",
+      "soundRu": "бор",
+      "note": "в других случаях 'บร' даёт 'бор'"
+    },
+    {
+      "pattern": "ทร",
+      "soundEn": "son",
+      "soundRu": "сон",
+      "note": "ทร = 'сон', особенно во всех примерах: ทรราช, ทรณะ..."
+    },
+    {
+      "pattern": "ธร",
+      "soundEn": "son",
+      "soundRu": "сон",
+      "note": "сложенные 'ธร' аналогично 'сон'"
+    },
+    {
+      "pattern": "อักษรนำ",
+      "condition": "high+low consonant",
+      "soundEn": "two syllables",
+      "soundRu": "двусложное",
+      "note": "первый слог читается как '‑a', второй по классу consonant"
+    }
+  ]
+}

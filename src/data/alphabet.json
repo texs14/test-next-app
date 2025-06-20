@@ -1,0 +1,414 @@
+{
+  "vowels": {
+    "◌ะ": {
+      "soundEn": "a",
+      "soundRu": "а",
+      "type": "short-vowel",
+      "position": ["right"]
+    },
+    "◌า": {
+      "soundEn": "aa",
+      "soundRu": "аа",
+      "type": "long-vowel",
+      "position": ["right"]
+    },
+    "◌ิ": {
+      "soundEn": "i",
+      "soundRu": "и",
+      "type": "short-vowel",
+      "position": ["below"]
+    },
+    "◌ี": {
+      "soundEn": "ii",
+      "soundRu": "ии",
+      "type": "long-vowel",
+      "position": ["above"]
+    },
+    "◌ุ": {
+      "soundEn": "u",
+      "soundRu": "у",
+      "type": "short-vowel",
+      "position": ["below"]
+    },
+    "◌ู": {
+      "soundEn": "uu",
+      "soundRu": "уу",
+      "type": "long-vowel",
+      "position": ["below"]
+    },
+    "เ◌ะ": {
+      "soundEn": "e",
+      "soundRu": "э",
+      "type": "short-vowel",
+      "position": ["left","right"]
+    },
+    "เ◌": {
+      "soundEn": "ee",
+      "soundRu": "ээ",
+      "type": "long-vowel",
+      "position": ["left"]
+    },
+    "แ◌ะ": {
+      "soundEn": "ae",
+      "soundRu": "э̆",
+      "type": "short-vowel",
+      "position": ["left","right"]
+    },
+    "แ◌": {
+      "soundEn": "aae",
+      "soundRu": "ээ̆",
+      "type": "long-vowel",
+      "position": ["left"]
+    },
+    "โ◌ะ": {
+      "soundEn": "o",
+      "soundRu": "о",
+      "type": "short-vowel",
+      "position": ["left","right"]
+    },
+    "โ◌": {
+      "soundEn": "oo",
+      "soundRu": "оо",
+      "type": "long-vowel",
+      "position": ["left"]
+    },
+    "◌็": {
+      "soundEn": "e",
+      "soundRu": "э",
+      "type": "diacritic",
+      "position": ["above"]
+    },
+    "◌ั": {
+      "soundEn": "a",
+      "soundRu": "а",
+      "type": "diacritic",
+      "position": ["above"]
+    },
+    "◌ำ": {
+      "soundEn": "am",
+      "soundRu": "ам",
+      "type": "special",
+      "position": ["above"]
+    },
+    "เ◌า": {
+      "soundEn": "ao",
+      "soundRu": "ао",
+      "type": "diphthong",
+      "letters": [
+        {"position":"left","letter":"เ"},
+        {"position":"right","letter":"า"}
+      ],
+      "position": ["left","right"]
+    },
+    "◌าย": {
+      "soundEn": "ai",
+      "soundRu": "ай",
+      "type": "diphthong",
+      "letters": [
+        {"position":"right","letter":"า"},
+        {"position":"right","letter":"ย"}
+      ],
+      "position": ["right","right"]
+    },
+    "ไ◌": {
+      "soundEn": "ai",
+      "soundRu": "ай",
+      "type": "diphthong",
+      "position": ["left"]
+    },
+    "ใ◌": {
+      "soundEn": "ai",
+      "soundRu": "ай",
+      "type": "diphthong",
+      "position": ["left"]
+    },
+    "เ◌อะ": {
+      "soundEn": "er",
+      "soundRu": "эр",
+      "type": "short-vowel",
+      "position": ["left","right"]
+    },
+    "เ◌อ": {
+      "soundEn": "eer",
+      "soundRu": "ээр",
+      "type": "long-vowel",
+      "position": ["left"]
+    },
+    "เ◌ิ": {
+      "soundEn": "eor",
+      "soundRu": "эор",
+      "type": "short-vowel",
+      "position": ["left","below"]
+    },
+    "เ◌ีย": {
+      "soundEn": "ia",
+      "soundRu": "ииа",
+      "type": "long-vowel",
+      "letters": [
+        {"position":"left","letter":"เ"},
+        {"position":"above","letter":"ี"},
+        {"position":"right","letter":"ย"}
+      ],
+      "position": ["left","above","right"]
+    },
+    "เ◌ียว": {
+      "soundEn": "iao",
+      "soundRu": "ияо",
+      "type": "diphthong",
+      "letters": [
+        {"position":"left","letter":"เ"},
+        {"position":"above","letter":"ี"},
+        {"position":"right","letter":"ว"}
+      ],
+      "position": ["left","above","right"]
+    },
+    "◌วย": {
+      "soundEn": "uai",
+      "soundRu": "уай",
+      "type": "diphthong",
+      "position": ["below","right"]
+    }
+  },
+  "consonants": {
+    "ก": {
+      "soundEn": "g",
+      "soundRu": "г",
+      "type": "consonant",
+      "endSound": "k",
+      "typeEnd": "dead",
+      "class": "middle"
+    },
+    "ข": {
+      "soundEn": "kh",
+      "soundRu": "кх",
+      "type": "consonant",
+      "endSound": "k",
+      "typeEnd": "dead",
+      "class": "high"
+    },
+    "ค": {
+      "soundEn": "kh",
+      "soundRu": "кх",
+      "type": "consonant",
+      "endSound": "k",
+      "typeEnd": "dead",
+      "class": "low"
+    },
+    "ฆ": {
+      "soundEn": "kh",
+      "soundRu": "кх",
+      "type": "consonant",
+      "endSound": "k",
+      "typeEnd": "dead",
+      "class": "low"
+    },
+    "ง": {
+      "soundEn": "ng",
+      "soundRu": "нг",
+      "type": "consonant",
+      "endSound": "ng",
+      "typeEnd": "live",
+      "class": "low"
+    },
+    "จ": {
+      "soundEn": "j",
+      "soundRu": "дж",
+      "type": "consonant",
+      "endSound": "t",
+      "typeEnd": "dead",
+      "class": "middle"
+    },
+    "ฉ": {
+      "soundEn": "ch",
+      "soundRu": "чх",
+      "type": "consonant",
+      "endSound": null,
+      "typeEnd": "live",
+      "class": "high"
+    },
+    "ช": {
+      "soundEn": "ch",
+      "soundRu": "ч",
+      "type": "consonant",
+      "endSound": "t",
+      "typeEnd": "dead",
+      "class": "low"
+    },
+    "ซ": {
+      "soundEn": "s",
+      "soundRu": "с",
+      "type": "consonant",
+      "endSound": "t",
+      "typeEnd": "dead",
+      "class": "low"
+    },
+    "ด": {
+      "soundEn": "d",
+      "soundRu": "д",
+      "type": "consonant",
+      "endSound": "t",
+      "typeEnd": "dead",
+      "class": "middle"
+    },
+    "ต": {
+      "soundEn": "t",
+      "soundRu": "т",
+      "type": "consonant",
+      "endSound": "t",
+      "typeEnd": "dead",
+      "class": "middle"
+    },
+    "ท": {
+      "soundEn": "th",
+      "soundRu": "тх",
+      "type": "consonant",
+      "endSound": "t",
+      "typeEnd": "dead",
+      "class": "low"
+    },
+    "น": {
+      "soundEn": "n",
+      "soundRu": "н",
+      "type": "consonant",
+      "endSound": "n",
+      "typeEnd": "live",
+      "class": "low"
+    },
+    "บ": {
+      "soundEn": "b",
+      "soundRu": "б",
+      "type": "consonant",
+      "endSound": "p",
+      "typeEnd": "dead",
+      "class": "middle"
+    },
+    "ป": {
+      "soundEn": "p",
+      "soundRu": "п",
+      "type": "consonant",
+      "endSound": "p",
+      "typeEnd": "dead",
+      "class": "middle"
+    },
+    "ผ": {
+      "soundEn": "ph",
+      "soundRu": "пх",
+      "type": "consonant",
+      "endSound": null,
+      "typeEnd": "live",
+      "class": "high"
+    },
+    "ฝ": {
+      "soundEn": "f",
+      "soundRu": "ф",
+      "type": "consonant",
+      "endSound": null,
+      "typeEnd": "live",
+      "class": "high"
+    },
+    "พ": {
+      "soundEn": "ph",
+      "soundRu": "пх",
+      "type": "consonant",
+      "endSound": "p",
+      "typeEnd": "dead",
+      "class": "low"
+    },
+    "ฟ": {
+      "soundEn": "f",
+      "soundRu": "ф",
+      "type": "consonant",
+      "endSound": "p",
+      "typeEnd": "dead",
+      "class": "low"
+    },
+    "ม": {
+      "soundEn": "m",
+      "soundRu": "м",
+      "type": "consonant",
+      "endSound": "m",
+      "typeEnd": "live",
+      "class": "low"
+    },
+    "ย": {
+      "soundEn": "y",
+      "soundRu": "й",
+      "type": "consonant",
+      "endSound": "y",
+      "typeEnd": "live",
+      "class": "low"
+    },
+    "ร": {
+      "soundEn": "r",
+      "soundRu": "р",
+      "type": "consonant",
+      "endSound": "n",
+      "typeEnd": "live",
+      "class": "low"
+    },
+    "ล": {
+      "soundEn": "l",
+      "soundRu": "л",
+      "type": "consonant",
+      "endSound": "n",
+      "typeEnd": "live",
+      "class": "low"
+    },
+    "ว": {
+      "soundEn": "w",
+      "soundRu": "в",
+      "type": "consonant",
+      "endSound": "w",
+      "typeEnd": "live",
+      "class": "low"
+    },
+    "ส": {
+      "soundEn": "s",
+      "soundRu": "с",
+      "type": "consonant",
+      "endSound": "t",
+      "typeEnd": "dead",
+      "class": "high"
+    },
+    "ห": {
+      "soundEn": "h",
+      "soundRu": "х",
+      "type": "consonant",
+      "endSound": null,
+      "typeEnd": "live",
+      "class": "high"
+    },
+    "อ": {
+      "soundEn": "ʼ",
+      "soundRu": "",
+      "type": "consonant",
+      "endSound": null,
+      "typeEnd": "live",
+      "class": "middle"
+    },
+    "ฮ": {
+      "soundEn": "h",
+      "soundRu": "х",
+      "type": "consonant",
+      "endSound": null,
+      "typeEnd": "live",
+      "class": "low"
+    },
+    "ฤ": {
+      "soundEn": ["ri","rue"],
+      "soundRu": ["ри","руе"],
+      "type": "consonant",
+      "endSound": null,
+      "typeEnd": "live",
+      "class": "special"
+    },
+    "ฦ": {
+      "soundEn": ["li","lue"],
+      "soundRu": ["ли","луе"],
+      "type": "consonant",
+      "endSound": null,
+      "typeEnd": "live",
+      "class": "special"
+    }
+  }
+}
