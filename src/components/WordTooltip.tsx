@@ -48,37 +48,32 @@ export function WordTooltip() {
 
     (async () => {
       try {
-        if (originalLang === 'th') {
-          const [dictRes, trRes] = await Promise.all([
-            fetch(
-              `https://longdo-json.herokuapp.com/?dict=longdo&word=${encodeURIComponent(word)}`,
-            ),
-            fetch(`/api/thai-transcribe?text=${encodeURIComponent(word)}`),
-          ]);
-          if (!dictRes.ok) throw new Error('Ошибка при получении Longdo-данных');
-          if (!trRes.ok) throw new Error('Ошибка при получении транскрипции');
-          const dictData = await dictRes.json();
-          const meaning = dictData.meanings?.[0] || {};
-          const translation = meaning.definition || '—';
-          const examples = meaning.examples || [];
-          const trData = await trRes.json();
-          if (!cancelled) {
-            setWordInfo({ translation, examples, transcription: trData.words[0] });
-          }
-        } else {
-          const res = await fetch(
-            `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`,
-          );
-          if (!res.ok) throw new Error('Ошибка при получении данных');
-          const data = await res.json();
-          const entry = data[0];
-          const meaning = entry?.meanings?.[0] || {};
-          const defObj = meaning.definitions?.[0] || {};
-          const translation = defObj.definition || '—';
-          const examples = defObj.example ? [defObj.example] : [];
-          if (!cancelled) {
-            setWordInfo({ translation, examples });
-          }
+        const body = {
+          segments: [{ id: 0, text: word }],
+          targetLangs: ['ru'],
+          sourceLang: originalLang,
+        };
+        const [trRes, transRes] = await Promise.all([
+          fetch('/api/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          }),
+          originalLang === 'th'
+            ? fetch(`/api/thai-transcribe?text=${encodeURIComponent(word)}`)
+            : Promise.resolve(null),
+        ]);
+        if (!trRes.ok) throw new Error('Ошибка перевода');
+        const trData = await trRes.json();
+        const translation = trData.segments?.[0]?.translations?.ru || '—';
+        let transcription = undefined;
+        if (transRes) {
+          if (!transRes.ok) throw new Error('Ошибка при получении транскрипции');
+          const data = await transRes.json();
+          transcription = data.words[0];
+        }
+        if (!cancelled) {
+          setWordInfo({ translation, examples: [], transcription });
         }
       } catch {
         if (!cancelled) {

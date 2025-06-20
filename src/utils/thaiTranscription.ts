@@ -34,22 +34,48 @@ Object.keys((tons as any).tone_marks || {}).forEach(() => {});
 ((exceptions as any).exceptions || []).forEach(() => {});
 
 const vowelChars = new Set<string>();
-Object.keys((alphabet as any).vowels).forEach(k => {
-  const letters = k.replace(/◌/g, '');
+const vowelSeqMap: Record<string, { latin: string; cyrillic: string }> = {};
+Object.entries((alphabet as any).vowels).forEach(([k, val]) => {
+  const letters: string[] = (val as any).letters
+    ? ((val as any).letters as any[]).map(l => l.letter)
+    : k.replace(/◌/g, '').split('');
   for (const ch of letters) vowelChars.add(ch);
+  vowelSeqMap[letters.join('')] = {
+    latin: (val as any).soundEn,
+    cyrillic: (val as any).soundRu,
+  };
 });
 
 const consonantMap = (alphabet as any).consonants as Record<string, any>;
-const vowelMap = (alphabet as any).vowels as Record<string, any>;
 
-function transliterateChar(ch: string, lang: 'latin' | 'cyrillic'): string {
-  if (consonantMap[ch]) {
-    return (lang === 'latin' ? consonantMap[ch].soundEn : consonantMap[ch].soundRu) || ch;
+function transliterateSyllable(syl: string, lang: 'latin' | 'cyrillic'): { text: string; tone: string } {
+  let tone = 'M';
+  const chars = Array.from(syl);
+  const vowelLetters: string[] = [];
+  let result = '';
+  for (const ch of chars) {
+    if (toneMarkMap[ch]) {
+      tone = toneMarkMap[ch];
+      continue;
+    }
+    if (consonantMap[ch]) {
+      result += (lang === 'latin' ? consonantMap[ch].soundEn : consonantMap[ch].soundRu) || ch;
+    } else if (vowelChars.has(ch)) {
+      vowelLetters.push(ch);
+    } else {
+      result += ch;
+    }
   }
-  if (vowelMap[ch]) {
-    return (lang === 'latin' ? vowelMap[ch].soundEn : vowelMap[ch].soundRu) || ch;
+  const vowelKey = vowelLetters.join('');
+  if (vowelKey) {
+    const v = vowelSeqMap[vowelKey];
+    if (v) {
+      result += v[lang];
+    } else {
+      result += vowelLetters.map(ch => (consonantMap[ch] ? consonantMap[ch][lang === 'latin' ? 'soundEn' : 'soundRu'] : ch)).join('');
+    }
   }
-  return ch;
+  return { text: result, tone };
 }
 
 function splitIntoSyllables(word: string): string[] {
@@ -80,20 +106,16 @@ export function transcribeThaiText(text: string): TranscriptionResult {
   let cyrillicText = '';
   words.forEach((w, idx) => {
     const syllables = splitIntoSyllables(w).map(syl => {
-      let latin = '';
-      let cyrillic = '';
-      let tone = 'M';
-      for (const ch of Array.from(syl)) {
-        if (toneMarkMap[ch]) {
-          tone = toneMarkMap[ch];
-          continue;
-        }
-        latin += transliterateChar(ch, 'latin');
-        cyrillic += transliterateChar(ch, 'cyrillic');
-      }
-      latin += tone;
-      cyrillic += tone;
-      return { text: syl, latin, cyrillic, tone } as SyllableInfo;
+      const resLat = transliterateSyllable(syl, 'latin');
+      const resCyr = transliterateSyllable(syl, 'cyrillic');
+      const tone = resLat.tone; // both have same tone
+      return {
+        text: syl,
+        latin: resLat.text + tone,
+        cyrillic: resCyr.text + tone,
+        tone,
+      } as SyllableInfo;
+
     });
     const latinWord = syllables.map(s => s.latin).join('');
     const cyrWord = syllables.map(s => s.cyrillic).join('');
