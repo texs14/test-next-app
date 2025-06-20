@@ -1,8 +1,8 @@
 // src/components/VideoPlayer/VideoPlayer.tsx
-import { useRef, useState, useEffect, PointerEvent as PE, ChangeEvent } from 'react';
+import { useRef, useState, useEffect, PointerEvent as PE, ChangeEvent, MouseEvent } from 'react';
 import type { Segment, SubtitleData, Word } from '@/types/index.types';
 import type { Language } from '../LanguageMetaForm';
-// import { useTooltipContext } from '../../contexts/TooltipContext';
+import { useTooltipContext } from '../../contexts/TooltipContext';
 
 export type VideoDoc = {
   src: string; // URL или blob-URL
@@ -34,7 +34,24 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(1);
 
-  // const { showTooltip } = useTooltipContext();
+  const { showTooltip } = useTooltipContext();
+
+  const handleWordClick = (
+    e: MouseEvent<HTMLSpanElement>,
+    wordText: string,
+  ) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    showTooltip({
+      word: wordText,
+      originalLang,
+      coords: {
+        x: rect.left + rect.width / 2,
+        yAbove: rect.top,
+        yBelow: rect.bottom,
+      },
+      visible: true,
+    });
+  };
 
   // Используем готовые сегменты напрямую
   const sentenceSubs = subtitles;
@@ -181,7 +198,7 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
             <span
               data-interactive="true"
               key={i}
-              // onClick={(e: MouseEvent<HTMLSpanElement>) => showTooltip(w.word, e, originalLang)}
+              onClick={e => handleWordClick(e, w.word)}
               className={`text-white cursor-pointer hover:text-blue-300 ${w.word === ' ' ? 'mr-3' : ''}`}
             >
               {w.word}
