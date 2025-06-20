@@ -115,6 +115,7 @@ export function transcribeThaiText(text: string): TranscriptionResult {
         cyrillic: resCyr.text + tone,
         tone,
       } as SyllableInfo;
+
     });
     const latinWord = syllables.map(s => s.latin).join('');
     const cyrWord = syllables.map(s => s.cyrillic).join('');
