@@ -246,7 +246,7 @@
       "soundEn": "d",
       "soundRu": "д",
       "type": "consonant",
-      "endSound": "t",
+      "endSound": "d",
       "typeEnd": "dead",
       "class": "middle"
     },
@@ -278,7 +278,7 @@
       "soundEn": "b",
       "soundRu": "б",
       "type": "consonant",
-      "endSound": "p",
+      "endSound": "b",
       "typeEnd": "dead",
       "class": "middle"
     },

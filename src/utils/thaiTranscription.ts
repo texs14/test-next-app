@@ -34,7 +34,7 @@ Object.keys((tons as any).tone_marks || {}).forEach(() => {});
 ((exceptions as any).exceptions || []).forEach(() => {});
 
 const vowelChars = new Set<string>();
-const vowelSeqMap: Record<string, { latin: string; cyrillic: string }> = {};
+const vowelSeqMap: Record<string, { latin: string; cyrillic: string; length: 'short' | 'long' }> = {};
 Object.entries((alphabet as any).vowels).forEach(([k, val]) => {
   const letters: string[] = (val as any).letters
     ? ((val as any).letters as any[]).map(l => l.letter)
@@ -43,39 +43,123 @@ Object.entries((alphabet as any).vowels).forEach(([k, val]) => {
   vowelSeqMap[letters.join('')] = {
     latin: (val as any).soundEn,
     cyrillic: (val as any).soundRu,
+    length: (val as any).type && String((val as any).type).includes('short') ? 'short' : 'long',
   };
 });
 
 const consonantMap = (alphabet as any).consonants as Record<string, any>;
 
+const HO_NAM_SET = new Set(['ง', 'ญ', 'น', 'ม', 'ย', 'ร', 'ล', 'ว']);
+
+function computeTone(cls: string, mark: string | null, finalType: 'live' | 'dead', vowelLength: 'short' | 'long'): string {
+  if (mark) {
+    switch (mark) {
+      case '\u0E48':
+        return cls === 'low' ? 'F' : 'L';
+      case '\u0E49':
+        return cls === 'low' ? 'H' : 'F';
+      case '\u0E4A':
+        return cls === 'low' ? 'R' : 'H';
+      case '\u0E4B':
+        return cls === 'low' ? 'H' : 'R';
+      default:
+        return 'M';
+    }
+  }
+  if (cls === 'middle') {
+    return finalType === 'live' ? 'M' : 'L';
+  }
+  if (cls === 'high') {
+    return finalType === 'live' ? 'R' : 'L';
+  }
+  // low class
+  if (finalType === 'live') return 'M';
+  return 'H';
+}
+
 function transliterateSyllable(syl: string, lang: 'latin' | 'cyrillic'): { text: string; tone: string } {
-  let tone = 'M';
+  let toneMark: string | null = null;
   const chars = Array.from(syl);
-  const vowelLetters: string[] = [];
-  let result = '';
-  for (const ch of chars) {
+  const consonants: {ch: string; idx: number}[] = [];
+  const vowelLetters: {ch: string; idx: number}[] = [];
+
+  for (let idx = 0; idx < chars.length; idx++) {
+    const ch = chars[idx];
     if (toneMarkMap[ch]) {
-      tone = toneMarkMap[ch];
-      continue;
-    }
-    if (consonantMap[ch]) {
-      result += (lang === 'latin' ? consonantMap[ch].soundEn : consonantMap[ch].soundRu) || ch;
+      toneMark = ch;
+    } else if (consonantMap[ch]) {
+      consonants.push({ ch, idx });
     } else if (vowelChars.has(ch)) {
-      vowelLetters.push(ch);
-    } else {
-      result += ch;
+      vowelLetters.push({ ch, idx });
     }
   }
-  const vowelKey = vowelLetters.join('');
-  if (vowelKey) {
+
+  // Determine vowel sound
+  const vowelKey = vowelLetters.map(v => v.ch).join('');
+  let vowelLength: 'short' | 'long' = 'long';
+  let vowelLat = '';
+  let vowelCyr = '';
+  if (vowelKey && vowelSeqMap[vowelKey]) {
     const v = vowelSeqMap[vowelKey];
-    if (v) {
-      result += v[lang];
-    } else {
-      result += vowelLetters.map(ch => (consonantMap[ch] ? consonantMap[ch][lang === 'latin' ? 'soundEn' : 'soundRu'] : ch)).join('');
-    }
+    vowelLat = v.latin;
+    vowelCyr = v.cyrillic;
+    vowelLength = v.length;
+  } else {
+    vowelLat = 'o';
+    vowelCyr = 'о';
+    vowelLength = 'short';
   }
-  return { text: result, tone };
+
+  // Determine initial and final consonants by position
+  let firstVowelIdx = vowelLetters.length > 0 ? Math.min(...vowelLetters.map(v => v.idx)) : -1;
+  let initialCons: {ch: string; idx: number}[] = [];
+  let finalConsArr: {ch: string; idx: number}[] = [];
+  if (firstVowelIdx >= 0) {
+    initialCons = consonants.filter(c => c.idx < firstVowelIdx);
+    finalConsArr = consonants.filter(c => c.idx > firstVowelIdx);
+  } else {
+    // implicit vowel case
+    if (consonants.length > 0) initialCons = [consonants[0]];
+    if (consonants.length > 1) finalConsArr = consonants.slice(1);
+  }
+
+  let toneClass = 'low';
+  let initialLat = '';
+  let initialCyr = '';
+  if (initialCons.length > 0) {
+    let start = 0;
+    if (initialCons[0].ch === 'ห' && initialCons.length > 1 && HO_NAM_SET.has(initialCons[1].ch)) {
+      toneClass = 'high';
+      start = 1;
+    } else {
+      toneClass = consonantMap[initialCons[0].ch].class;
+    }
+    initialLat = initialCons.slice(start).map(ic => consonantMap[ic.ch].soundEn).join('');
+    initialCyr = initialCons.slice(start).map(ic => consonantMap[ic.ch].soundRu).join('');
+  }
+
+  let finalConsonant: string | null = null;
+  if (finalConsArr.length > 0) {
+    finalConsonant = finalConsArr[finalConsArr.length - 1].ch;
+  }
+  let finalLat = '';
+  let finalCyr = '';
+  let finalType: 'live' | 'dead' = 'live';
+  if (finalConsonant) {
+    const cons = consonantMap[finalConsonant];
+    finalLat = cons.endSound || cons.soundEn;
+    finalCyr = cons.endSound ? cons.endSound : cons.soundRu;
+    finalType = cons.typeEnd || 'live';
+  }
+
+  const tone = computeTone(toneClass, toneMark, finalType, vowelLength);
+
+  const text =
+    (lang === 'latin'
+      ? initialLat + vowelLat + finalLat
+      : initialCyr + vowelCyr + finalCyr);
+
+  return { text, tone };
 }
 
 function splitIntoSyllables(word: string): string[] {
