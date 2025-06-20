@@ -1,11 +1,24 @@
 // src/components/WordTooltip.tsx
+'use client';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 // import type { Language } from '@/types/index.types';
 import { useTooltipContext } from '../contexts/TooltipContext';
 
+interface SyllableTr {
+  text: string;
+  latin: string;
+  cyrillic: string;
+  tone: string;
+}
+
 interface WordInfo {
   translation: string;
   examples: string[];
+  transcription?: {
+    latin: string;
+    cyrillic: string;
+    syllables: SyllableTr[];
+  };
 }
 
 export function WordTooltip() {
@@ -35,32 +48,32 @@ export function WordTooltip() {
 
     (async () => {
       try {
-        if (originalLang === 'th') {
-          const res = await fetch(
-            `https://longdo-json.herokuapp.com/?dict=longdo&word=${encodeURIComponent(word)}`,
-          );
-          if (!res.ok) throw new Error('Ошибка при получении Longdo-данных');
-          const data = await res.json();
-          const meaning = data.meanings?.[0] || {};
-          const translation = meaning.definition || '—';
-          const examples = meaning.examples || [];
-          if (!cancelled) {
-            setWordInfo({ translation, examples });
-          }
-        } else {
-          const res = await fetch(
-            `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`,
-          );
-          if (!res.ok) throw new Error('Ошибка при получении данных');
-          const data = await res.json();
-          const entry = data[0];
-          const meaning = entry?.meanings?.[0] || {};
-          const defObj = meaning.definitions?.[0] || {};
-          const translation = defObj.definition || '—';
-          const examples = defObj.example ? [defObj.example] : [];
-          if (!cancelled) {
-            setWordInfo({ translation, examples });
-          }
+        const body = {
+          segments: [{ id: 0, text: word }],
+          targetLangs: ['ru'],
+          sourceLang: originalLang,
+        };
+        const [trRes, transRes] = await Promise.all([
+          fetch('/api/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          }),
+          originalLang === 'th'
+            ? fetch(`/api/thai-transcribe?text=${encodeURIComponent(word)}`)
+            : Promise.resolve(null),
+        ]);
+        if (!trRes.ok) throw new Error('Ошибка перевода');
+        const trData = await trRes.json();
+        const translation = trData.segments?.[0]?.translations?.ru || '—';
+        let transcription = undefined;
+        if (transRes) {
+          if (!transRes.ok) throw new Error('Ошибка при получении транскрипции');
+          const data = await transRes.json();
+          transcription = data.words[0];
+        }
+        if (!cancelled) {
+          setWordInfo({ translation, examples: [], transcription });
         }
       } catch {
         if (!cancelled) {
@@ -126,6 +139,11 @@ export function WordTooltip() {
           <p className="mt-2 text-sm">
             <strong>Перевод:</strong> {wordInfo.translation}
           </p>
+          {wordInfo.transcription && (
+            <p className="mt-2 text-sm">
+              <strong>Транскрипция:</strong> {wordInfo.transcription.latin}
+            </p>
+          )}
           {wordInfo.examples.length > 0 && (
             <div className="mt-2 text-sm">
               <strong>Примеры:</strong>
