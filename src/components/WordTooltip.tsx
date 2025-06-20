@@ -3,9 +3,21 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 // import type { Language } from '@/types/index.types';
 import { useTooltipContext } from '../contexts/TooltipContext';
 
+interface SyllableTr {
+  text: string;
+  latin: string;
+  cyrillic: string;
+  tone: string;
+}
+
 interface WordInfo {
   translation: string;
   examples: string[];
+  transcription?: {
+    latin: string;
+    cyrillic: string;
+    syllables: SyllableTr[];
+  };
 }
 
 export function WordTooltip() {
@@ -36,16 +48,21 @@ export function WordTooltip() {
     (async () => {
       try {
         if (originalLang === 'th') {
-          const res = await fetch(
-            `https://longdo-json.herokuapp.com/?dict=longdo&word=${encodeURIComponent(word)}`,
-          );
-          if (!res.ok) throw new Error('Ошибка при получении Longdo-данных');
-          const data = await res.json();
-          const meaning = data.meanings?.[0] || {};
+          const [dictRes, trRes] = await Promise.all([
+            fetch(
+              `https://longdo-json.herokuapp.com/?dict=longdo&word=${encodeURIComponent(word)}`,
+            ),
+            fetch(`/api/thai-transcribe?text=${encodeURIComponent(word)}`),
+          ]);
+          if (!dictRes.ok) throw new Error('Ошибка при получении Longdo-данных');
+          if (!trRes.ok) throw new Error('Ошибка при получении транскрипции');
+          const dictData = await dictRes.json();
+          const meaning = dictData.meanings?.[0] || {};
           const translation = meaning.definition || '—';
           const examples = meaning.examples || [];
+          const trData = await trRes.json();
           if (!cancelled) {
-            setWordInfo({ translation, examples });
+            setWordInfo({ translation, examples, transcription: trData.words[0] });
           }
         } else {
           const res = await fetch(
@@ -126,6 +143,11 @@ export function WordTooltip() {
           <p className="mt-2 text-sm">
             <strong>Перевод:</strong> {wordInfo.translation}
           </p>
+          {wordInfo.transcription && (
+            <p className="mt-2 text-sm">
+              <strong>Транскрипция:</strong> {wordInfo.transcription.latin}
+            </p>
+          )}
           {wordInfo.examples.length > 0 && (
             <div className="mt-2 text-sm">
               <strong>Примеры:</strong>
