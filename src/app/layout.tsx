@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import DragDropProvider from './DragDropProvider'
+import TooltipProvider from './TooltipProvider'
 import { AuthProvider } from '@/contexts/AuthContext'
 import ProtectedLayout from '@/components/ProtectedLayout'
 import Nav from '@/components/Nav'
@@ -21,8 +22,10 @@ export default function RootLayout({
         <AuthProvider>
           <ProtectedLayout>
             <DragDropProvider>
-              <Nav />
-              {children}
+              <TooltipProvider>
+                <Nav />
+                {children}
+              </TooltipProvider>
             </DragDropProvider>
           </ProtectedLayout>
         </AuthProvider>
