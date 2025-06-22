@@ -4,9 +4,10 @@ import { useAuth } from '@/contexts/AuthContext'
 import UserMenu from './UserMenu'
 
 export default function Nav() {
-  const { user } = useAuth()
+  // Авторизация отключена
+  /* const { user } = useAuth()
 
-  if (!user) return null
+  if (!user) return null */
 
   return (
     <nav className="flex items-center justify-center gap-4 mt-3">
@@ -15,7 +16,7 @@ export default function Nav() {
       <Link href="/exercises">Упражнения</Link>
       <Link href="/syllables">Собираем слоги</Link>
       <Link href="/upload">Загрузить видео</Link>
-      <UserMenu classes='ml-auto mr-6'/>
+      {/* <UserMenu classes='ml-auto mr-6'/> */}
     </nav>
   )
 }

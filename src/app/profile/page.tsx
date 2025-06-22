@@ -11,10 +11,15 @@ interface UserInfo {
 }
 
 export default function ProfilePage() {
-  const { user } = useAuth()
-  const [info, setInfo] = useState<UserInfo | null>(null)
+  // Авторизация отключена
+  /* const { user } = useAuth() */
+  const [info, setInfo] = useState<UserInfo | null>({
+    name: 'Тестовый пользователь',
+    age: 25,
+    login: 'test_user'
+  }) // Заглушка для демонстрации
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!user) return
     const load = async () => {
       const snap = await getDoc(doc(db, 'users', user.uid))
@@ -23,7 +28,7 @@ export default function ProfilePage() {
       }
     }
     load()
-  }, [user])
+  }, [user]) */
 
   if (!info) {
     return <p className="p-4">Загрузка...</p>

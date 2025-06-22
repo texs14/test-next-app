@@ -19,16 +19,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased flex-col items-center justify-center">
-        <AuthProvider>
-          <ProtectedLayout>
+        {/* <AuthProvider>
+          <ProtectedLayout> */}
             <DragDropProvider>
               <TooltipProvider>
                 <Nav />
                 {children}
               </TooltipProvider>
             </DragDropProvider>
-          </ProtectedLayout>
-        </AuthProvider>
+          {/* </ProtectedLayout>
+        </AuthProvider> */}
       </body>
     </html>
   );

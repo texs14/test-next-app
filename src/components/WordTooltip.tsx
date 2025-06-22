@@ -140,9 +140,20 @@ export function WordTooltip() {
             <strong>Перевод:</strong> {wordInfo.translation}
           </p>
           {wordInfo.transcription && (
-            <p className="mt-2 text-sm">
-              <strong>Транскрипция:</strong> {wordInfo.transcription.latin}
-            </p>
+            <div className="mt-2 space-y-1 text-sm">
+              <p>
+                <strong>Транскрипция (лат.):</strong> {wordInfo.transcription.latin}
+              </p>
+              <p>
+                <strong>Транскрипция (кир.):</strong> {wordInfo.transcription.cyrillic}
+              </p>
+              <p>
+                <strong>Слоги:</strong>{' '}
+                {wordInfo.transcription.syllables
+                  .map(s => `${s.latin}`)
+                  .join(' | ')}
+              </p>
+            </div>
           )}
           {wordInfo.examples.length > 0 && (
             <div className="mt-2 text-sm">

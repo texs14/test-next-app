@@ -5,11 +5,12 @@ import { db } from '../firebase'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 
 export default function SettingsPage() {
-  const { user } = useAuth()
+  // Авторизация отключена
+  /* const { user } = useAuth() */
   const [name, setName] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false) // Изменено на false, так как авторизация отключена
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!user) return
     const load = async () => {
       const snap = await getDoc(doc(db, 'users', user.uid))
@@ -20,13 +21,14 @@ export default function SettingsPage() {
       setLoading(false)
     }
     load()
-  }, [user])
+  }, [user]) */
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user) return
+    /* if (!user) return
     await updateDoc(doc(db, 'users', user.uid), { name })
-    alert('Имя обновлено')
+    alert('Имя обновлено') */
+    alert('Авторизация отключена')
   }
 
   if (loading) return <p className="p-4">Загрузка...</p>

@@ -1,5 +1,4 @@
-
-export type Language = 'ru' | 'en' | 'th';
+export type Language = 'ru' | 'en' | 'th' | 'zh';
 
 export type Word = { word: string; start: number; end: number };
 export type Segment = {
@@ -12,6 +11,7 @@ export type Segment = {
     en: string;
     th: string;
     ru: string;
+    zh?: string;
   };
 };
 export type SubtitleData = {
@@ -37,6 +37,7 @@ export interface Sentence {
   translations: {
     ru: string;
     en: string;
+    zh?: string;
   };
   note: {
     ru?: string;

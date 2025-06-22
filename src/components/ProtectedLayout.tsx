@@ -4,7 +4,8 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
+  // Авторизация отключена
+  /* const { user, loading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
@@ -20,7 +21,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   if (loading || (!user && pathname !== '/login' && pathname !== '/register')) {
     return null
-  }
+  } */
 
   return <>{children}</>
 }
