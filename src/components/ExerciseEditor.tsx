@@ -4,7 +4,7 @@ import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { useParams } from 'next/navigation'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { db } from '@/app/firebase'
+import { db, auth } from '@/app/firebase'
 import type { Sentence, Exercise } from '@/types/index.types'
 import SentenceForm, { SentenceFormData } from './SentenceForm'
 
@@ -111,7 +111,13 @@ export default function ExerciseEditor() {
       if (exerciseId) {
         await updateDoc(doc(db, 'exercises', exerciseId), exercise as any)
       } else {
-        await addDoc(collection(db, 'exercises'), exercise)
+        // Добавляем поле createdBy для новых упражнений
+        const exerciseWithCreator = {
+          ...exercise,
+          createdBy: auth.currentUser?.uid || null,
+          createdAt: new Date()
+        }
+        await addDoc(collection(db, 'exercises'), exerciseWithCreator)
         setForms([emptyForm()])
         setTitle('')
         setDescription('')

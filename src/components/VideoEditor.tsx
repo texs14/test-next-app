@@ -7,7 +7,7 @@ import { SegmentEditor } from './SegmentEditor'
 import VideoPlayer from './VideoPlayer/VideoPlayer'
 import type { Segment, SubtitleData, VideoDoc } from '@/types/index.types'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { db } from '@/app/firebase'
+import { db, auth } from '@/app/firebase'
 import { buildSentenceSegments } from './VideoPlayer/halpers'
 
 export default function VideoEditor() {
@@ -140,6 +140,7 @@ export default function VideoEditor() {
       name: videoDoc.name,
       size: videoDoc.size,
       updated: new Date(),
+      createdBy: auth.currentUser?.uid || null,
     }
     try {
       await setDoc(doc(db, 'videos', idToUse), updatedData)
@@ -201,7 +202,7 @@ export default function VideoEditor() {
           <SegmentEditor
             segments={editedSubs.segments}
             originalLang={videoDoc.originalLang as Language}
-            targetLangs={videoDoc.targetLangs}
+            targetLangs={videoDoc.targetLangs as Language[]}
             onChange={newSegments =>
               setEditedSubs(prev => (prev ? { ...prev, segments: newSegments } : null))
             }
