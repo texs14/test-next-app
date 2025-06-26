@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { exerciseService } from '@/lib/exerciseService'
-import ModernSentenceExercise from '@/components/ModernSentenceExercise'
+import SentenceExercise from '@/components/SentenceExercise'
 import { Fireworks } from '@/components/Fireworks'
 import type { Exercise } from '@/types/index.types'
 
@@ -47,6 +47,17 @@ const mockExercises: { [key: string]: Exercise } = {
         note: {
           ru: 'Транскрипция: mâi pen rai'
         }
+      },
+      {
+        text: 'ฉัน รัก คุณ',
+        rightAnswers: ['ฉันรักคุณ', 'ฉัน รัก คุณ'],
+        translations: {
+          ru: 'Я тебя люблю',
+          en: 'I love you'
+        },
+        note: {
+          ru: 'Транскрипция: chǎn rák khun'
+        }
       }
     ]
   },
@@ -87,6 +98,17 @@ const mockExercises: { [key: string]: Exercise } = {
         },
         note: {
           ru: 'Транскрипция: sǎam'
+        }
+      },
+      {
+        text: 'ฉัน ชอบ กิน ข้าว',
+        rightAnswers: ['ฉันชอบกินข้าว', 'ฉัน ชอบ กิน ข้าว'],
+        translations: {
+          ru: 'Я люблю есть рис',
+          en: 'I like to eat rice'
+        },
+        note: {
+          ru: 'Многословное тестовое упражнение'
         }
       }
     ]
@@ -187,7 +209,7 @@ export default function ExercisePage() {
 
         {/* Упражнения */}
         {exercise.sentences.map((sent, idx) => (
-          <ModernSentenceExercise
+          <SentenceExercise
             key={idx}
             sentence={sent}
             index={idx}

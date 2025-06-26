@@ -32,7 +32,10 @@ export const WordDropSlot: React.FC<WordDropSlotProps> = ({
   // Подключаем drop к ref
   drop(dropRef);
 
-  const handleWordClick = () => {
+  const handleWordClick = (event: React.MouseEvent) => {
+    // Предотвращаем обработку кликов во время drag операций
+    if (event.detail === 0) return; // Это событие не от реального клика пользователя
+    
     if (placedWord) {
       // При клике на слово в слоте - возвращаем его в доступные слова
       // Передаем специальный индекс -1 чтобы показать, что это возврат в shuffled
@@ -66,12 +69,13 @@ export const WordDropSlot: React.FC<WordDropSlotProps> = ({
         transition={{ duration: 0.2 }}
       >
       {placedWord ? (
-        <DraggableWord
-          id={placedWord.id}
-          text={placedWord.text}
-          onClick={handleWordClick}
-          isPlaced={true}
-        />
+        <div onClick={handleWordClick}>
+          <DraggableWord
+            id={placedWord.id}
+            text={placedWord.text}
+            isPlaced={true}
+          />
+        </div>
       ) : (
         <motion.div
           className="text-gray-400 text-sm"
