@@ -77,8 +77,9 @@ const StyledWordDropSlot: React.FC<{
   placedWord?: { id: string; text: string; } | null;
   onDropWord: (slotIndex: number, wordId: string) => void;
   onDragStart: (e: DragEvent<HTMLDivElement>, id: string) => void;
+  onReturnWord: (wordId: string) => void;
   isCorrect?: boolean;
-}> = ({ slotIndex, placedWord, onDropWord, onDragStart, isCorrect }) => {
+}> = ({ slotIndex, placedWord, onDropWord, onDragStart, onReturnWord, isCorrect }) => {
   
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -117,6 +118,7 @@ const StyledWordDropSlot: React.FC<{
           id={placedWord.id}
           text={placedWord.text}
           onDragStart={onDragStart}
+          onClick={() => onReturnWord(placedWord.id)}
           isPlaced={true}
         />
       ) : (
@@ -151,6 +153,7 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
   const [slots, setSlots] = useState<(TokenState | null)[]>([]);
   const [feedback, setFeedback] = useState<boolean[] | null>(null);
   const [isChecked, setIsChecked] = useState(false);
+  const [isDragOverAvailable, setIsDragOverAvailable] = useState(false);
 
   // Инициализация предложения
   useEffect(() => {
@@ -233,6 +236,27 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
     setSlots(newSlots);
     setFeedback(null);
     setIsChecked(false);
+  };
+
+  // Функция для возврата слова из слота в неиспользованные слова
+  const handleReturnWord = (wordId: string) => {
+    const newShuffled = [...shuffled];
+    const newSlots = [...slots];
+
+    // Находим слово в слотах и возвращаем его в shuffled
+    const sourceSlotIndex = newSlots.findIndex(slot => slot?.id === wordId);
+    if (sourceSlotIndex !== -1) {
+      const wordToReturn = newSlots[sourceSlotIndex];
+      if (wordToReturn && !newShuffled.find(token => token.id === wordToReturn.id)) {
+        newShuffled.push(wordToReturn);
+      }
+      newSlots[sourceSlotIndex] = null;
+
+      setShuffled(newShuffled);
+      setSlots(newSlots);
+      setFeedback(null);
+      setIsChecked(false);
+    }
   };
 
   const handleCheck = () => {
@@ -329,10 +353,33 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
 
             {/* Неиспользованные слова */}
             <motion.div 
-              className="min-h-[60px] p-4 mb-4 border-2 border-dashed border-purple-200 rounded-xl bg-purple-50"
+              className={`min-h-[60px] p-4 mb-4 border-2 border-dashed rounded-xl transition-all duration-200 ${
+                isDragOverAvailable 
+                  ? 'border-purple-400 bg-purple-100 shadow-lg' 
+                  : 'border-purple-200 bg-purple-50'
+              }`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                setIsDragOverAvailable(true);
+              }}
+              onDragLeave={(e) => {
+                // Проверяем, что мы действительно покинули контейнер, а не дочерний элемент
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setIsDragOverAvailable(false);
+                }
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                const wordId = e.dataTransfer.getData('text/plain');
+                if (wordId) {
+                  handleReturnWord(wordId);
+                }
+                setIsDragOverAvailable(false);
+              }}
             >
               <h4 className="text-purple-700 font-medium mb-2 text-sm">Доступные слова:</h4>
               <div className="flex flex-wrap gap-2">
@@ -383,6 +430,7 @@ export default function SentenceExercise({ sentence, onComplete, isActive, index
                         placedWord={slot}
                         onDropWord={onDropWord}
                         onDragStart={onDragStart}
+                        onReturnWord={handleReturnWord}
                         isCorrect={feedback ? feedback[idx] : undefined}
                       />
                     </motion.div>
