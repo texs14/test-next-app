@@ -2,36 +2,28 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore'
-import { db } from '@/app/firebase'
-import type { Exercise } from '@/types/index.types'
-
-interface ExerciseWithId extends Exercise {
-  id: string
-}
+import { exerciseService } from '@/lib/exerciseService'
+import ExercisePreview from '@/components/ExercisePreview'
+import type { ExercisePreview as ExercisePreviewType } from '@/types/index.types'
 
 // Моковые упражнения для fallback в случае ошибки
-const mockExerciseList: ExerciseWithId[] = [
+const mockExerciseList: ExercisePreviewType[] = [
   {
     id: '1',
     title: 'Основы тайского языка',
     description: 'Изучаем базовые фразы на тайском языке',
-    topic: 'Базовый словарь',
-    difficulty: 'easy',
-    sentences: []
+    difficulty: 'easy'
   },
   {
     id: '2',
     title: 'Числа на тайском',
     description: 'Учимся считать от 1 до 10',
-    topic: 'Числа',
-    difficulty: 'easy',
-    sentences: []
+    difficulty: 'easy'
   }
 ]
 
 export default function Exercises() {
-  const [exercises, setExercises] = useState<ExerciseWithId[]>([])
+  const [exercises, setExercises] = useState<ExercisePreviewType[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -41,12 +33,10 @@ export default function Exercises() {
       try {
         setLoading(true)
         setError(null)
-        const snap = await getDocs(collection(db, 'exercises'))
-        const exercisesFromDb = snap.docs.map(d => ({ 
-          id: d.id, 
-          ...(d.data() as Exercise) 
-        }))
-        setExercises(exercisesFromDb)
+        
+        // Получаем только превью упражнений
+        const exercisePreviews = await exerciseService.getExercisePreviews()
+        setExercises(exercisePreviews)
       } catch (error) {
         console.error('Ошибка загрузки упражнений:', error)
         setError('Не удалось загрузить упражнения из базы данных')
@@ -60,16 +50,8 @@ export default function Exercises() {
     fetchData()
   }, [])
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Удалить упражнение?')) return
-    
-    try {
-      await deleteDoc(doc(db, 'exercises', id))
-      setExercises(prev => prev.filter(e => e.id !== id))
-    } catch (error) {
-      console.error('Ошибка удаления упражнения:', error)
-      alert('Не удалось удалить упражнение')
-    }
+  const handleDelete = (id: string) => {
+    setExercises(prev => prev.filter(e => e.id !== id))
   }
 
   if (loading) {
@@ -104,38 +86,15 @@ export default function Exercises() {
           Упражнения не найдены. Создайте первое упражнение!
         </div>
       ) : (
-        exercises.map(ex => (
-          <div key={ex.id} className="p-4 space-y-2 border rounded shadow-sm">
-            <h2 className="text-lg font-bold">{ex.title}</h2>
-            <p className="text-gray-700">{ex.description}</p>
-            <p className="text-sm text-gray-600">
-              Тема: {ex.topic} | Сложность: {ex.difficulty}
-              {ex.sentences && ex.sentences.length > 0 && (
-                <span> | Предложений: {ex.sentences.length}</span>
-              )}
-            </p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => router.push(`/exercises/${ex.id}`)}
-                className="px-3 py-1 text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
-              >
-                Открыть
-              </button>
-              <button
-                onClick={() => router.push(`/exercises/${ex.id}/edit`)}
-                className="px-3 py-1 text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
-              >
-                Редактировать
-              </button>
-              <button
-                onClick={() => handleDelete(ex.id)}
-                className="px-3 py-1 text-white bg-red-600 rounded hover:bg-red-700 transition-colors"
-              >
-                Удалить
-              </button>
-            </div>
-          </div>
-        ))
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {exercises.map(exercise => (
+            <ExercisePreview
+              key={exercise.id}
+              exercise={exercise}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
       )}
     </div>
   )

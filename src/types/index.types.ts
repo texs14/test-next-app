@@ -52,3 +52,12 @@ export interface Exercise {
   difficulty: string;
   sentences: Sentence[];
 }
+
+export interface ExercisePreview {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  createdAt?: any;
+  updatedAt?: any;
+}

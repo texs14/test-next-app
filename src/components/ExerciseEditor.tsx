@@ -1,10 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { useParams } from 'next/navigation'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { db, auth } from '@/app/firebase'
+import { exerciseService } from '@/lib/exerciseService'
+import { auth } from '@/app/firebase'
 import type { Sentence, Exercise } from '@/types/index.types'
 import SentenceForm, { SentenceFormData } from './SentenceForm'
 
@@ -50,28 +50,29 @@ export default function ExerciseEditor() {
   useEffect(() => {
     if (!exerciseId) return
     const load = async () => {
-      if (!exerciseId) return
-
-      const snap = await getDoc(doc(db, 'exercises', exerciseId))
-      if (snap.exists()) {
-        const data = snap.data() as Exercise
-        setTitle(data.title)
-        setDescription(data.description)
-        setTopic(data.topic)
-        setDifficulty(data.difficulty)
-        setForms(
-          data.sentences.map(s => ({
-            text: s.text,
-            rightAnswers: s.rightAnswers.join('\n'),
-            translations: { 
-              ru: s.translations.ru || '', 
-              en: s.translations.en || '',
-              zh: s.translations.zh || ''
-            },
-            notes: { ru: s.note?.ru || '', en: s.note?.en || '' },
-            expanded: false,
-          }))
-        )
+      try {
+        const data = await exerciseService.getExerciseById(exerciseId)
+        if (data) {
+          setTitle(data.title)
+          setDescription(data.description)
+          setTopic(data.topic)
+          setDifficulty(data.difficulty)
+          setForms(
+            data.sentences.map(s => ({
+              text: s.text,
+              rightAnswers: s.rightAnswers.join('\n'),
+              translations: { 
+                ru: s.translations.ru || '', 
+                en: s.translations.en || '',
+                zh: s.translations.zh || ''
+              },
+              notes: { ru: s.note?.ru || '', en: s.note?.en || '' },
+              expanded: false,
+            }))
+          )
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки упражнения:', error)
       }
     }
     load()
@@ -109,15 +110,9 @@ export default function ExerciseEditor() {
       }
 
       if (exerciseId) {
-        await updateDoc(doc(db, 'exercises', exerciseId), exercise as any)
+        await exerciseService.updateExercise(exerciseId, exercise)
       } else {
-        // Добавляем поле createdBy для новых упражнений
-        const exerciseWithCreator = {
-          ...exercise,
-          createdBy: auth.currentUser?.uid || null,
-          createdAt: new Date()
-        }
-        await addDoc(collection(db, 'exercises'), exerciseWithCreator)
+        await exerciseService.createExercise(exercise)
         setForms([emptyForm()])
         setTitle('')
         setDescription('')

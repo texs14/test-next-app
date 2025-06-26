@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-// import { doc, getDoc } from 'firebase/firestore'
-// import { db } from '@/app/firebase'
+import { exerciseService } from '@/lib/exerciseService'
 import ModernSentenceExercise from '@/components/ModernSentenceExercise'
 import { Fireworks } from '@/components/Fireworks'
 import type { Exercise } from '@/types/index.types'
@@ -103,32 +102,30 @@ export default function ExercisePage() {
   useEffect(() => {
     if (!exerciseId) return
     
-    // Имитируем загрузку данных из Firebase
-    setTimeout(() => {
-      const mockExercise = mockExercises[exerciseId as string]
-      if (mockExercise) {
-        setExercise(mockExercise)
-      }
-    }, 500) // Имитируем задержку загрузки
-    
-    // Код для работы с реальным Firebase (закомментирован пока не настроен)
-    /*
-    ;(async () => {
+    const fetchExercise = async () => {
       try {
-        const snap = await getDoc(doc(db, 'exercises', exerciseId))
-        if (snap.exists()) {
-          setExercise(snap.data() as Exercise)
+        // Получаем полные данные упражнения из коллекции exercises
+        const exerciseData = await exerciseService.getExerciseById(exerciseId as string)
+        if (exerciseData) {
+          setExercise(exerciseData)
+        } else {
+          // Fallback на моковые данные если упражнение не найдено
+          const mockExercise = mockExercises[exerciseId as string]
+          if (mockExercise) {
+            setExercise(mockExercise)
+          }
         }
       } catch (error) {
         console.error('Ошибка загрузки упражнения:', error)
-        // Fallback на моковые данные
+        // Fallback на моковые данные при ошибке
         const mockExercise = mockExercises[exerciseId as string]
         if (mockExercise) {
           setExercise(mockExercise)
         }
       }
-    })()
-    */
+    }
+    
+    fetchExercise()
   }, [exerciseId])
 
   const total = exercise?.sentences.length ?? 0
