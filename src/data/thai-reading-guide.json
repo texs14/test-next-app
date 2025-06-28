@@ -1,0 +1,254 @@
+{
+  "meta": {
+    "title": "Thai Reading Guide - Practical Examples",
+    "description": "Practical guide for reading Thai text with step-by-step examples",
+    "version": "1.0"
+  },
+  "basic_pronunciation_rules": {
+    "consonant_sounds": {
+      "description": "How to pronounce Thai consonants",
+      "tips": [
+        "Thai has aspirated and unaspirated consonants - aspirated sounds have a puff of air",
+        "Some consonants sound different at the beginning vs end of syllables",
+        "Practice moving your tongue to different positions in your mouth"
+      ],
+      "common_mistakes": [
+        "Don't confuse ก (g/k) with ค (kh) - the second has more breath",
+        "Thai 'r' is rolled, but often pronounced as 'l' in casual speech",
+        "Final consonants are not released - stop the sound abruptly"
+      ]
+    },
+    "vowel_sounds": {
+      "description": "How to pronounce Thai vowels",
+      "tips": [
+        "Thai distinguishes short and long vowels - length affects meaning",
+        "Some vowels are written around the consonant, not just after it",
+        "The 'ue' sound (◌ึ, ◌ือ) is like Russian 'ы' - central unrounded vowel"
+      ],
+      "positions": {
+        "before_consonant": ["เ", "แ", "โ", "ไ", "ใ"],
+        "after_consonant": ["า", "าย", "าว", "ำ"],
+        "above_consonant": ["ิ", "ี", "ุ", "ู", "ั"],
+        "below_consonant": ["ุ", "ู"],
+        "around_consonant": ["เ...ะ", "แ...ะ", "โ...ะ", "เ...า", "เ...ีย"]
+      }
+    },
+    "tone_pronunciation": {
+      "description": "How to produce the five Thai tones",
+      "techniques": {
+        "mid_tone": "Flat, neutral pitch - like stating a fact",
+        "low_tone": "Low, level pitch - like being disappointed", 
+        "falling_tone": "Start high, drop to low - like saying 'oh!' in surprise",
+        "high_tone": "High, level pitch - like asking 'really?'",
+        "rising_tone": "Start low, rise high - like asking a question in English"
+      },
+      "practice_words": [
+        {
+          "sound": "maa",
+          "tones": {
+            "mid": {"thai": "มา", "meaning": "come"},
+            "low": {"thai": "หม่า", "meaning": "(none)"},
+            "falling": {"thai": "ม้า", "meaning": "horse"},  
+            "high": {"thai": "ม่า", "meaning": "(none)"},
+            "rising": {"thai": "หมา", "meaning": "dog"}
+          }
+        }
+      ]
+    }
+  },
+  "reading_steps": {
+    "step_by_step": [
+      {
+        "step": 1,
+        "title": "Identify consonants",
+        "description": "Find all consonant letters and determine their class",
+        "example": {
+          "word": "ขาว",
+          "analysis": "ข (high class) + า + ว (low class final)"
+        }
+      },
+      {
+        "step": 2, 
+        "title": "Identify vowels",
+        "description": "Find vowel marks and determine the vowel sound",
+        "example": {
+          "word": "ขาว",
+          "analysis": "า (long 'a') + ว (makes 'ao' diphthong)"
+        }
+      },
+      {
+        "step": 3,
+        "title": "Determine syllable type",
+        "description": "Check if syllable is live (open/sonorant ending) or dead (closed)",
+        "example": {
+          "word": "ขาว", 
+          "analysis": "Ends with ว (sonorant) = live syllable"
+        }
+      },
+      {
+        "step": 4,
+        "title": "Apply tone rules",
+        "description": "Use consonant class + syllable type + tone marks to find tone",
+        "example": {
+          "word": "ขาว",
+          "analysis": "High class + live syllable + no tone mark = rising tone"
+        }
+      },
+      {
+        "step": 5,
+        "title": "Combine sounds",
+        "description": "Put together: initial consonant + vowel + final + tone",
+        "example": {
+          "word": "ขาว",
+          "result": "khǎao (кхǎао) - white"
+        }
+      }
+    ]
+  },
+  "common_patterns": {
+    "frequent_syllables": [
+      {
+        "pattern": "C + า",
+        "examples": ["มา - maa - come", "ใหม่ - mài - new", "ขา - khǎa - leg"],
+        "notes": "Long 'a' is very common"
+      },
+      {
+        "pattern": "C + ี", 
+        "examples": ["ดี - dii - good", "ที่ - thîi - at/place", "นี่ - nîi - this"],
+        "notes": "Long 'i' sound"
+      },
+      {
+        "pattern": "C + ู",
+        "examples": ["ดู - duu - look", "หนู - nǔu - mouse", "ชู - chuu - raise"],
+        "notes": "Long 'u' sound"
+      },
+      {
+        "pattern": "เC + ะ",
+        "examples": ["เละ - lé - soggy", "เซ - sē - ", "เขะ - khè - "],
+        "notes": "Short 'e' sound with glottal stop"
+      },
+      {
+        "pattern": "เC",
+        "examples": ["เล - lee", "เซ - see", "เข - khee"],
+        "notes": "Long 'e' sound"
+      }
+    ],
+    "consonant_clusters": [
+      {
+        "type": "CR clusters (consonant + ร)",
+        "examples": ["ตรง - trong - straight", "ครม - khrom - department", "ปราง - praang - clear"],
+        "pronunciation": "ร often silent or very light"
+      },
+      {
+        "type": "CL clusters (consonant + ล)", 
+        "examples": ["ปลา - plaa - fish", "คลื่น - khlɯ̌ɯn - wave", "บลา - blaa"],
+        "pronunciation": "ล often silent in casual speech"
+      },
+      {
+        "type": "CW clusters (consonant + ว)",
+        "examples": ["ขวา - khwǎa - right", "สวย - sǔai - beautiful", "แกว่ - gwaèe - "],
+        "pronunciation": "ว creates lip rounding"
+      }
+    ],
+    "tone_marker_effects": [
+      {
+        "marker": "◌่ (ไม้เอก)",
+        "effects": {
+          "high_class": "low tone",
+          "mid_class": "low tone", 
+          "low_class": "falling tone"
+        },
+        "examples": ["ข่า - khàa (low)", "ก่า - gàa (low)", "ค่า - khâa (falling)"]
+      },
+      {
+        "marker": "◌้ (ไม้โท)",
+        "effects": {
+          "high_class": "falling tone",
+          "mid_class": "falling tone",
+          "low_class": "high tone" 
+        },
+        "examples": ["ข้า - khâa (falling)", "ก้า - gâa (falling)", "ค้า - kháa (high)"]
+      }
+    ]
+  },
+  "practice_exercises": {
+    "beginner_words": [
+      {"thai": "มา", "transcription": "maa", "cyrillic": "маа", "meaning": "come", "tone": "mid"},
+      {"thai": "ไป", "transcription": "pai", "cyrillic": "пай", "meaning": "go", "tone": "mid"},
+      {"thai": "ดี", "transcription": "dii", "cyrillic": "дии", "meaning": "good", "tone": "mid"},
+      {"thai": "ใหม่", "transcription": "mài", "cyrillic": "мày", "meaning": "new", "tone": "low"},
+      {"thai": "ขาว", "transcription": "khǎao", "cyrillic": "кхǎао", "meaning": "white", "tone": "rising"},
+      {"thai": "แดง", "transcription": "daeng", "cyrillic": "дээнг", "meaning": "red", "tone": "mid"},
+      {"thai": "น้ำ", "transcription": "náam", "cyrillic": "нáам", "meaning": "water", "tone": "high"},
+      {"thai": "ข้าว", "transcription": "khâao", "cyrillic": "кхâао", "meaning": "rice", "tone": "falling"}
+    ],
+    "tone_practice": [
+      {
+        "base": "kaa",
+        "variations": [
+          {"thai": "กา", "tone": "mid", "meaning": "crow"},
+          {"thai": "ก่า", "tone": "low", "meaning": ""},
+          {"thai": "ก้า", "tone": "falling", "meaning": ""},
+          {"thai": "ก๊า", "tone": "high", "meaning": ""},
+          {"thai": "ก๋า", "tone": "rising", "meaning": ""}
+        ]
+      }
+    ],
+    "reading_passages": [
+      {
+        "title": "Simple Greetings",
+        "thai": "สวัสดี ครับ ผม ชื่อ จอห์น คุณ ชื่อ อะไร ครับ",
+        "transcription": "sàwàtdii khráp phǒm chɯ̂ɯ joohn khun chɯ̂ɯ àrai khráp",
+        "cyrillic": "сàвàтдии кхрáп пхǒм чɯ̂ɯ джоон кхун чɯ̂ɯ àрай кхрáп",
+        "meaning": "Hello sir/madam. My name is John. What is your name, sir?",
+        "breakdown": [
+          "สวัสดี - greeting",
+          "ครับ - polite particle (male)",
+          "ผม - I (male speaker)", 
+          "ชื่อ - name/to be named",
+          "คุณ - you (polite)",
+          "อะไร - what"
+        ]
+      }
+    ]
+  },
+  "troubleshooting": {
+    "common_difficulties": [
+      {
+        "problem": "Confusing similar looking letters",
+        "solution": "Practice writing and pay attention to small differences",
+        "examples": [
+          "ต vs ด - ต has a loop, ด doesn't",
+          "บ vs ป - บ is more rounded, ป has a straight line",
+          "ค vs ฅ - ฅ is obsolete, use ค"
+        ]
+      },
+      {
+        "problem": "Forgetting tone rules",
+        "solution": "Memorize consonant classes first, then apply tone rules systematically",
+        "tips": [
+          "High class consonants: ข ฉ ถ ผ ฝ ส ห (+ some rare ones)",
+          "Mid class consonants: ก จ ด ต บ ป อ",
+          "Low class consonants: everything else"
+        ]
+      },
+      {
+        "problem": "Not hearing tone differences",
+        "solution": "Practice with minimal pairs and native audio",
+        "exercises": [
+          "Record yourself saying different tones",
+          "Use tone training apps",
+          "Listen to native speakers repeatedly"
+        ]
+      }
+    ],
+    "learning_tips": [
+      "Start with high-frequency words",
+      "Learn consonant classes before detailed tone rules", 
+      "Practice writing by hand to reinforce memory",
+      "Use spaced repetition for vocabulary",
+      "Focus on pronunciation from the beginning",
+      "Find patterns in spelling rather than memorizing every word"
+    ]
+  }
+} 

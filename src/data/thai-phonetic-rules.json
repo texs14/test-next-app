@@ -1,0 +1,736 @@
+{
+  "meta": {
+    "title": "Thai Phonetic Rules and Transcription Guide",
+    "description": "Complete guide for Thai alphabet reading rules with Latin and Cyrillic transcription",
+    "version": "1.0",
+    "lastUpdated": "2024-01-01"
+  },
+  "consonants": {
+    "high_class": {
+      "description": "High class consonants - produce rising tone in live syllables",
+      "letters": {
+        "ข": {
+          "soundLatin": "kh",
+          "soundCyrillic": "кх",
+          "finalSoundLatin": "k",
+          "finalSoundCyrillic": "к",
+          "name": "ขอ ไข่",
+          "meaning": "egg",
+          "examples": ["ไข่ - khai - кхай - egg", "ขาว - khaao - кхаао - white"],
+          "pronunciation": "Aspirated k sound - like 'k' in 'kite' but with breath"
+        },
+        "ฉ": {
+          "soundLatin": "ch",
+          "soundCyrillic": "ч",
+          "finalSoundLatin": null,
+          "finalSoundCyrillic": null,
+          "name": "ฉอ ฉิ่ง",
+          "meaning": "cymbals",
+          "examples": ["ฉิ่ง - ching - чинг - cymbals"],
+          "pronunciation": "Soft ch sound - like 'ch' in 'cheese'"
+        },
+        "ถ": {
+          "soundLatin": "th",
+          "soundCyrillic": "тх",
+          "finalSoundLatin": "t",
+          "finalSoundCyrillic": "т",
+          "name": "ถอ ถุง",
+          "meaning": "bag",
+          "examples": ["ถุง - thung - тхунг - bag", "ถนน - thanon - тханон - road"],
+          "pronunciation": "Aspirated t sound - like 't' in 'top' but with breath"
+        },
+        "ผ": {
+          "soundLatin": "ph",
+          "soundCyrillic": "пх",
+          "finalSoundLatin": null,
+          "finalSoundCyrillic": null,
+          "name": "ผอ ผึ้ง",
+          "meaning": "bee",
+          "examples": ["ผึ้ง - phueng - пхыенг - bee"],
+          "pronunciation": "Aspirated p sound - like 'p' in 'pot' but with breath"
+        },
+        "ฝ": {
+          "soundLatin": "f",
+          "soundCyrillic": "ф",
+          "finalSoundLatin": null,
+          "finalSoundCyrillic": null,
+          "name": "ฝอ ฝา",
+          "meaning": "lid",
+          "examples": ["ฝา - faa - фаа - lid"],
+          "pronunciation": "F sound - like 'f' in 'fire'"
+        },
+        "ส": {
+          "soundLatin": "s",
+          "soundCyrillic": "с",
+          "finalSoundLatin": "t",
+          "finalSoundCyrillic": "т",
+          "name": "สอ เสือ",
+          "meaning": "tiger",
+          "examples": ["เสือ - suea - сыеа - tiger", "สวย - suai - суай - beautiful"],
+          "pronunciation": "S sound - like 's' in 'sun'"
+        },
+        "ห": {
+          "soundLatin": "h",
+          "soundCyrillic": "х",
+          "finalSoundLatin": null,
+          "finalSoundCyrillic": null,
+          "name": "หอ หีบ",
+          "meaning": "chest",
+          "examples": ["หีบ - hiip - хиип - chest", "หา - haa - хаа - to find"],
+          "pronunciation": "H sound - like 'h' in 'house'",
+          "special": "Can be silent prefix to make low consonants high class"
+        }
+      }
+    },
+    "middle_class": {
+      "description": "Middle class consonants - produce mid tone in live syllables",
+      "letters": {
+        "ก": {
+          "soundLatin": "g",
+          "soundCyrillic": "г",
+          "finalSoundLatin": "k",
+          "finalSoundCyrillic": "к",
+          "name": "กอ ไก่",
+          "meaning": "chicken",
+          "examples": ["ไก่ - gai - гай - chicken", "กิน - gin - гин - to eat"],
+          "pronunciation": "Soft g sound - between 'g' and 'k'"
+        },
+        "จ": {
+          "soundLatin": "j",
+          "soundCyrillic": "дж",
+          "finalSoundLatin": "t",
+          "finalSoundCyrillic": "т",
+          "name": "จอ จาน",
+          "meaning": "plate",
+          "examples": ["จาน - jaan - джаан - plate", "จริง - jing - джинг - true"],
+          "pronunciation": "J sound - like 'j' in 'jump'"
+        },
+        "ด": {
+          "soundLatin": "d",
+          "soundCyrillic": "д",
+          "finalSoundLatin": "t",
+          "finalSoundCyrillic": "т",
+          "name": "ดอ เด็ก",
+          "meaning": "child",
+          "examples": ["เด็ก - dek - дек - child", "ดี - dii - дии - good"],
+          "pronunciation": "D sound - like 'd' in 'dog'"
+        },
+        "ต": {
+          "soundLatin": "t",
+          "soundCyrillic": "т",
+          "finalSoundLatin": "t",
+          "finalSoundCyrillic": "т",
+          "name": "ตอ เต่า",
+          "meaning": "turtle",
+          "examples": ["เต่า - tao - тао - turtle", "ตา - taa - таа - eye/grandfather"],
+          "pronunciation": "T sound - like 't' in 'top' without aspiration"
+        },
+        "บ": {
+          "soundLatin": "b",
+          "soundCyrillic": "б",
+          "finalSoundLatin": "p",
+          "finalSoundCyrillic": "п",
+          "name": "บอ ใบไม้",
+          "meaning": "leaf",
+          "examples": ["ใบไม้ - baimai - баймай - leaf", "บ้าน - baan - баан - house"],
+          "pronunciation": "B sound - like 'b' in 'book'"
+        },
+        "ป": {
+          "soundLatin": "p",
+          "soundCyrillic": "п",
+          "finalSoundLatin": "p",
+          "finalSoundCyrillic": "п",
+          "name": "ปอ ปลา",
+          "meaning": "fish",
+          "examples": ["ปลา - plaa - плаа - fish", "ป่า - paa - паа - forest"],
+          "pronunciation": "P sound - like 'p' in 'spin' without aspiration"
+        },
+        "อ": {
+          "soundLatin": "silent",
+          "soundCyrillic": "без звука",
+          "finalSoundLatin": null,
+          "finalSoundCyrillic": null,
+          "name": "อ่อ อ่าง",
+          "meaning": "basin",
+          "examples": ["อ่าง - aang - аанг - basin", "อาหาร - aahaan - аахаан - food"],
+          "pronunciation": "Silent consonant - used as vowel carrier",
+          "special": "Always silent, used to carry vowels that need consonant support"
+        }
+      }
+    },
+    "low_class": {
+      "description": "Low class consonants - produce mid tone in live syllables, can be subdivided",
+      "sonorant": {
+        "description": "Sonorant consonants - create live syllables when final",
+        "letters": {
+          "น": {
+            "soundLatin": "n",
+            "soundCyrillic": "н",
+            "finalSoundLatin": "n",
+            "finalSoundCyrillic": "н",
+            "name": "นอ หนู",
+            "meaning": "mouse",
+            "examples": ["หนู - nuu - нуу - mouse", "น้อง - nong - нонг - younger sibling"],
+            "pronunciation": "N sound - like 'n' in 'nice'"
+          },
+          "ม": {
+            "soundLatin": "m",
+            "soundCyrillic": "м",
+            "finalSoundLatin": "m",
+            "finalSoundCyrillic": "м",
+            "name": "มอ ม้า",
+            "meaning": "horse",
+            "examples": ["ม้า - maa - маа - horse", "มา - maa - маа - to come"],
+            "pronunciation": "M sound - like 'm' in 'mother'"
+          },
+          "ง": {
+            "soundLatin": "ng",
+            "soundCyrillic": "нг",
+            "finalSoundLatin": "ng",
+            "finalSoundCyrillic": "нг",
+            "name": "งอ งู",
+            "meaning": "snake",
+            "examples": ["งู - nguu - нгуу - snake", "ง่าย - ngaai - нгаай - easy"],
+            "pronunciation": "NG sound - like 'ng' in 'singing'"
+          },
+          "ย": {
+            "soundLatin": "y",
+            "soundCyrillic": "й",
+            "finalSoundLatin": "y",
+            "finalSoundCyrillic": "й",
+            "name": "ยอ ยักษ์",
+            "meaning": "giant",
+            "examples": ["ยักษ์ - yak - йак - giant", "ยาก - yaak - йаак - difficult"],
+            "pronunciation": "Y sound - like 'y' in 'yes'"
+          },
+          "ว": {
+            "soundLatin": "w",
+            "soundCyrillic": "в",
+            "finalSoundLatin": "w",
+            "finalSoundCyrillic": "в",
+            "name": "วอ แหวน",
+            "meaning": "ring",
+            "examples": ["แหวน - waen - ваен - ring", "วัน - wan - ван - day"],
+            "pronunciation": "W sound - like 'w' in 'water'"
+          },
+          "ล": {
+            "soundLatin": "l",
+            "soundCyrillic": "л",
+            "finalSoundLatin": "n",
+            "finalSoundCyrillic": "н",
+            "name": "ลอ ลิง",
+            "meaning": "monkey",
+            "examples": ["ลิง - ling - линг - monkey", "ลาว - laao - лаао - Lao"],
+            "pronunciation": "L sound - like 'l' in 'love'"
+          },
+          "ร": {
+            "soundLatin": "r",
+            "soundCyrillic": "р",
+            "finalSoundLatin": "n",
+            "finalSoundCyrillic": "н",
+            "name": "รอ เรือ",
+            "meaning": "boat",
+            "examples": ["เรือ - ruea - рыеа - boat", "รถ - rot - рот - car"],
+            "pronunciation": "R sound - rolled 'r' like in Spanish",
+            "special": "Often pronounced as 'l' in casual speech"
+          }
+        }
+      },
+      "voiceless": {
+        "description": "Voiceless low consonants - create dead syllables when final",
+        "letters": {
+          "ค": {
+            "soundLatin": "kh",
+            "soundCyrillic": "кх",
+            "finalSoundLatin": "k",
+            "finalSoundCyrillic": "к",
+            "name": "คอ ควาย",
+            "meaning": "buffalo",
+            "examples": ["ควาย - khwaai - кхваай - buffalo", "คน - khon - кхон - person"],
+            "pronunciation": "Aspirated k sound - like 'k' in 'kite' but softer than high class"
+          },
+          "ช": {
+            "soundLatin": "ch",
+            "soundCyrillic": "ч",
+            "finalSoundLatin": "t",
+            "finalSoundCyrillic": "т",
+            "name": "ชอ ช้าง",
+            "meaning": "elephant",
+            "examples": ["ช้าง - chaang - чаанг - elephant", "ชาย - chaai - чаай - man"],
+            "pronunciation": "Hard ch sound - like 'ch' in 'cheese' but softer"
+          },
+          "ท": {
+            "soundLatin": "th",
+            "soundCyrillic": "тх",
+            "finalSoundLatin": "t",
+            "finalSoundCyrillic": "т",
+            "name": "ทอ ทหาร",
+            "meaning": "soldier",
+            "examples": ["ทหาร - thahaan - тхахаан - soldier", "ที่ - thii - тхии - at/place"],
+            "pronunciation": "Aspirated t sound - softer than high class ถ"
+          },
+          "พ": {
+            "soundLatin": "ph",
+            "soundCyrillic": "пх",
+            "finalSoundLatin": "p",
+            "finalSoundCyrillic": "п",
+            "name": "พอ พาน",
+            "meaning": "tray",
+            "examples": ["พาน - phaan - пхаан - tray", "พูด - phuut - пхуут - to speak"],
+            "pronunciation": "Aspirated p sound - softer than high class ผ"
+          },
+          "ฟ": {
+            "soundLatin": "f",
+            "soundCyrillic": "ф",
+            "finalSoundLatin": "p",
+            "finalSoundCyrillic": "п",
+            "name": "ฟอ ฟัน",
+            "meaning": "teeth",
+            "examples": ["ฟัน - fan - фан - teeth", "ฟัง - fang - фанг - to listen"],
+            "pronunciation": "F sound - like 'f' in 'fire'"
+          }
+        }
+      }
+    }
+  },
+  "vowels": {
+    "simple_vowels": {
+      "description": "Basic vowel sounds with short and long variants",
+      "a_series": {
+        "short": {
+          "form": "◌ะ, ◌ั◌",
+          "soundLatin": "a",
+          "soundCyrillic": "а",
+          "examples": ["กะ - ga - га", "รัก - rak - рак - love"],
+          "pronunciation": "Short 'a' sound - like 'a' in 'cat' but shorter"
+        },
+        "long": {
+          "form": "◌า",
+          "soundLatin": "aa",
+          "soundCyrillic": "аа",
+          "examples": ["กา - gaa - гаа - crow", "มา - maa - маа - come"],
+          "pronunciation": "Long 'a' sound - like 'a' in 'father'"
+        }
+      },
+      "i_series": {
+        "short": {
+          "form": "◌ิ",
+          "soundLatin": "i",
+          "soundCyrillic": "и",
+          "examples": ["กิน - gin - гин - eat", "ปิด - pit - пит - close"],
+          "pronunciation": "Short 'i' sound - like 'i' in 'bit'"
+        },
+        "long": {
+          "form": "◌ี",
+          "soundLatin": "ii",
+          "soundCyrillic": "ии",
+          "examples": ["ดี - dii - дии - good", "นี่ - nii - нии - this"],
+          "pronunciation": "Long 'i' sound - like 'ee' in 'see'"
+        }
+      },
+      "ue_series": {
+        "short": {
+          "form": "◌ึ",
+          "soundLatin": "ue",
+          "soundCyrillic": "ы",
+          "examples": ["ถึง - thueng - тхынг - reach", "ปึก - puek - пык - thick"],
+          "pronunciation": "Central unrounded vowel - like Russian 'ы'"
+        },
+        "long": {
+          "form": "◌ือ, ◌ื◌",
+          "soundLatin": "uee",
+          "soundCyrillic": "ыы",
+          "examples": ["หนือ - nuea - ныеа - above", "ขื่น - khuen - кхыен - bitter"],
+          "pronunciation": "Long central unrounded vowel"
+        }
+      },
+      "u_series": {
+        "short": {
+          "form": "◌ุ",
+          "soundLatin": "u",
+          "soundCyrillic": "у",
+          "examples": ["ถุง - thung - тхунг - bag", "ขุด - khut - кхут - dig"],
+          "pronunciation": "Short 'u' sound - like 'u' in 'put'"
+        },
+        "long": {
+          "form": "◌ู",
+          "soundLatin": "uu",
+          "soundCyrillic": "уу",
+          "examples": ["หนู - nuu - нуу - mouse", "ดู - duu - дуу - look"],
+          "pronunciation": "Long 'u' sound - like 'oo' in 'moon'"
+        }
+      },
+      "e_series": {
+        "short": {
+          "form": "เ◌ะ, เ◌็◌",
+          "soundLatin": "e",
+          "soundCyrillic": "е",
+          "examples": ["เละ - le - ле", "เล็ก - lek - лек - small"],
+          "pronunciation": "Short 'e' sound - like 'e' in 'bet'"
+        },
+        "long": {
+          "form": "เ◌",
+          "soundLatin": "ee",
+          "soundCyrillic": "ее",
+          "examples": ["เล - lee - лее", "เมื่อ - muea - мыеа - when"],
+          "pronunciation": "Long 'e' sound - like 'ay' in 'day'"
+        }
+      },
+      "ae_series": {
+        "short": {
+          "form": "แ◌ะ, แ◌็◌",
+          "soundLatin": "ae",
+          "soundCyrillic": "э",
+          "examples": ["แกะ - gae - гэ - sheep", "แผ็น - phaen - пхэн - flat"],
+          "pronunciation": "Short open 'e' sound - like 'a' in 'cat'"
+        },
+        "long": {
+          "form": "แ◌",
+          "soundLatin": "aae",
+          "soundCyrillic": "ээ",
+          "examples": ["แก - gae - гээ - you", "แสง - saeng - сээнг - light"],
+          "pronunciation": "Long open 'e' sound"
+        }
+      },
+      "o_series": {
+        "short": {
+          "form": "โ◌ะ, ◌อ◌",
+          "soundLatin": "o",
+          "soundCyrillic": "о",
+          "examples": ["โต๊ะ - to - то - table", "นอน - non - нон - sleep"],
+          "pronunciation": "Short 'o' sound - like 'o' in 'pot'"
+        },
+        "long": {
+          "form": "โ◌",
+          "soundLatin": "oo",
+          "soundCyrillic": "оо",
+          "examples": ["โต - too - тоо - grow", "โลก - look - лоок - world"],
+          "pronunciation": "Long 'o' sound - like 'o' in 'go'"
+        }
+      },
+      "or_series": {
+        "short": {
+          "form": "เ◌าะ, ◌็อ◌",
+          "soundLatin": "or",
+          "soundCyrillic": "ор",
+          "examples": ["เขาะ - khaor - кхаор", "ป็อป - pop - поп - pop"],
+          "pronunciation": "Short open 'o' sound - like 'o' in 'pot'"
+        },
+        "long": {
+          "form": "◌อ",
+          "soundLatin": "oor",
+          "soundCyrillic": "оор",
+          "examples": ["กอง - gong - гонг - pile", "ปอก - pook - поок - peel"],
+          "pronunciation": "Long open 'o' sound"
+        }
+      },
+      "er_series": {
+        "short": {
+          "form": "เ◌อะ",
+          "soundLatin": "er",
+          "soundCyrillic": "ёр",
+          "examples": ["เลอะ - ler - лёр - messy"],
+          "pronunciation": "Short central vowel - like 'e' in 'the'"
+        },
+        "long": {
+          "form": "เ◌อ, เ◌ิ◌",
+          "soundLatin": "eer",
+          "soundCyrillic": "ёёр",
+          "examples": ["เลอ - leer - лёёр", "เกิด - gert - гёрт - born"],
+          "pronunciation": "Long central vowel"
+        }
+      }
+    },
+    "complex_vowels": {
+      "description": "Compound vowels and diphthongs",
+      "diphthongs": {
+        "ia_series": {
+          "short": {
+            "form": "เ◌ียะ",
+            "soundLatin": "ia",
+            "soundCyrillic": "иа",
+            "examples": ["เปียะ - pia - пиа"],
+            "pronunciation": "Short i+a diphthong"
+          },
+          "long": {
+            "form": "เ◌ีย, เ◌ีย◌",
+            "soundLatin": "iia",
+            "soundCyrillic": "ииа",
+            "examples": ["เปีย - piia - пииа", "เรียน - riian - рииан - study"],
+            "pronunciation": "Long i+a diphthong"
+          }
+        },
+        "ua_series": {
+          "short": {
+            "form": "◌ัวะ",
+            "soundLatin": "ua",
+            "soundCyrillic": "уа",
+            "examples": ["ป่วะ - pua - пуа"],
+            "pronunciation": "Short u+a diphthong"
+          },
+          "long": {
+            "form": "◌ัว, ◌ว◌",
+            "soundLatin": "uua",
+            "soundCyrillic": "ууа",
+            "examples": ["ป่วย - puai - пуай - sick", "สวย - suai - суай - beautiful"],
+            "pronunciation": "Long u+a diphthong"
+          }
+        },
+        "uea_series": {
+          "short": {
+            "form": "เ◌ือะ",
+            "soundLatin": "uea",
+            "soundCyrillic": "ыеа",
+            "examples": ["เปือะ - puea - пыеа"],
+            "pronunciation": "Short ue+a diphthong"
+          },
+          "long": {
+            "form": "เ◌ือ",
+            "soundLatin": "ueea",
+            "soundCyrillic": "ыыеа",
+            "examples": ["เปือ - pueea - пыыеа", "เมือง - muueang - мыыеанг - city"],
+            "pronunciation": "Long ue+a diphthong"
+          }
+        }
+      },
+      "final_vowels": {
+        "description": "Vowels with built-in final consonants",
+        "am": {
+          "form": "◌ำ",
+          "soundLatin": "am",
+          "soundCyrillic": "ам",
+          "examples": ["ทำ - tham - тхам - do", "น้ำ - nam - нам - water"],
+          "pronunciation": "a + m sound - like 'am' in 'ham'",
+          "special": "Always creates closed syllable"
+        },
+        "ai": {
+          "forms": ["ไ◌", "ใ◌", "◌ัย"],
+          "soundLatin": "ai",
+          "soundCyrillic": "ай",
+          "examples": ["ไก่ - gai - гай - chicken", "ใหม่ - mai - май - new", "วัย - wai - вай - age"],
+          "pronunciation": "a + i sound - like 'ai' in 'Thai'",
+          "special": "Always creates closed syllable"
+        },
+        "ao": {
+          "form": "เ◌า",
+          "soundLatin": "ao",
+          "soundCyrillic": "ао",
+          "examples": ["เขา - khao - кхао - he/she/mountain", "เลา - lao - лао"],
+          "pronunciation": "a + o sound - like 'ow' in 'cow'",
+          "special": "Always creates closed syllable"
+        }
+      }
+    }
+  },
+  "tone_rules": {
+    "description": "Rules for determining tones in Thai syllables",
+    "tones": {
+      "mid": {
+        "symbol": "¯",
+        "number": "1",
+        "description": "Level tone at mid pitch",
+        "pitch_pattern": "33",
+        "examples": ["มา - maa¯ - маа¯ - come", "ดี - dii¯ - дии¯ - good"]
+      },
+      "low": {
+        "symbol": "`",
+        "number": "2", 
+        "description": "Level tone at low pitch",
+        "pitch_pattern": "21",
+        "examples": ["หา - hàa - хàа - find", "ใส่ - sài - сài - put"]
+      },
+      "falling": {
+        "symbol": "^",
+        "number": "3",
+        "description": "Falling tone from high to low",
+        "pitch_pattern": "51",
+        "examples": ["ไม่ - mâi - мâй - no", "ห้า - hâa - хâа - five"]
+      },
+      "high": {
+        "symbol": "´",
+        "number": "4",
+        "description": "Level tone at high pitch", 
+        "pitch_pattern": "45",
+        "examples": ["ครับ - khráp - кхрáп - yes (male)", "น้อง - nóng - нóнг - younger"]
+      },
+      "rising": {
+        "symbol": "ˇ",
+        "number": "5",
+        "description": "Rising tone from low to high",
+        "pitch_pattern": "214",
+        "examples": ["ไหม - mǎi - мǎй - question particle", "ฉัน - chǎn - чǎн - I"]
+      }
+    },
+    "tone_markers": {
+      "mai_ek": {
+        "form": "◌่",
+        "name": "ไม้เอก",
+        "effects": {
+          "high_class": "low",
+          "mid_class": "low", 
+          "low_class": "falling"
+        }
+      },
+      "mai_tho": {
+        "form": "◌้",
+        "name": "ไม้โท",
+        "effects": {
+          "high_class": "falling",
+          "mid_class": "falling",
+          "low_class": "high"
+        }
+      },
+      "mai_tri": {
+        "form": "◌๊",
+        "name": "ไม้ตรี",
+        "effects": {
+          "mid_class": "high"
+        }
+      },
+      "mai_chattawa": {
+        "form": "◌๋",
+        "name": "ไม้จัตตวา",
+        "effects": {
+          "mid_class": "rising"
+        }
+      }
+    },
+    "tone_determination_rules": {
+      "description": "How to determine the tone of a syllable",
+      "factors": [
+        "consonant_class",
+        "syllable_type",
+        "vowel_length", 
+        "tone_marker",
+        "final_consonant"
+      ],
+      "live_syllable_rules": {
+        "high_class": {
+          "no_mark": "rising",
+          "mai_ek": "low",
+          "mai_tho": "falling"
+        },
+        "mid_class": {
+          "no_mark": "mid",
+          "mai_ek": "low",
+          "mai_tho": "falling",
+          "mai_tri": "high", 
+          "mai_chattawa": "rising"
+        },
+        "low_class": {
+          "no_mark": "mid",
+          "mai_ek": "falling",
+          "mai_tho": "high"
+        }
+      },
+      "dead_syllable_rules": {
+        "short_vowel": {
+          "high_class": "low",
+          "mid_class": "low",
+          "low_class": "high"
+        },
+        "long_vowel": {
+          "high_class": "falling", 
+          "mid_class": "low",
+          "low_class": "falling"
+        }
+      }
+    }
+  },
+  "special_rules": {
+    "consonant_clusters": {
+      "description": "Rules for consonant combinations",
+      "initial_clusters": {
+        "with_r": {
+          "forms": ["คร", "ตร", "ปร", "พร", "ฟร", "ทร", "สร", "ศร"],
+          "examples": ["คราว - khraao - кхраао - time", "ตรง - trong - тронг - straight"],
+          "pronunciation": "Second consonant 'r' is often dropped in casual speech"
+        },
+        "with_l": {
+          "forms": ["คล", "ตล", "ปล", "พล", "ฟล", "ทล"],
+          "examples": ["คลื่น - khluen - кхлыен - wave", "ปลา - plaa - плаа - fish"],
+          "pronunciation": "Second consonant 'l' is often dropped in casual speech"
+        },
+        "with_w": {
+          "forms": ["คว", "ตว", "ปว", "พว", "ฟว", "ทว", "สว"],
+          "examples": ["ขวา - khwaa - кхваа - right", "สวย - suai - суай - beautiful"],
+          "pronunciation": "Forms rounded vowel transition"
+        }
+      },
+      "ho_nam_combinations": {
+        "description": "ห + sonorant consonant combinations",
+        "purpose": "Makes low class sonorants behave like high class",
+        "examples": [
+          "หนู - hnuu → nǔu - нǔу - mouse",
+          "หมา - hmaa → mǎa - мǎа - dog", 
+          "หลาก - hlaak → làak - лàак - many",
+          "หยาก - hyaak → yàak - йàак - difficult"
+        ]
+      }
+    },
+    "vowel_shortening": {
+      "description": "Vowels before certain endings are shortened",
+      "rules": [
+        "Long vowels become short before final ด, บ, ก in dead syllables",
+        "Some vowels change quality in closed syllables"
+      ],
+      "examples": [
+        "ปลา - plaa (long) vs ปลาด - plàt (short)",
+        "เขา - khǎo (diphthong) vs เขาะ - khàʔ (short)"
+      ]
+    },
+    "silent_letters": {
+      "description": "Letters that are not pronounced",
+      "types": {
+        "thanthakhat": {
+          "marker": "◌์",
+          "purpose": "Silences the marked consonant",
+          "examples": ["ไม้ตรี◌์ - mai trií → mai trii"]
+        },
+        "historical_spellings": {
+          "description": "Some words retain old spellings with silent letters",
+          "examples": [
+            "ปลา◌์ - plaa◌์ → plaa",
+            "เล◌์ - le◌์ → le"
+          ]
+        }
+      }
+    }
+  },
+  "examples": {
+    "basic_words": [
+      {
+        "thai": "สวัสดี",
+        "latin": "sàwàt dii",
+        "cyrillic": "сàвàт дии",
+        "meaning": "hello",
+        "breakdown": "สะ-หฺวัด-ดี (sà-wàt-dii)"
+      },
+      {
+        "thai": "ขอบคุณ", 
+        "latin": "khɔ̀ɔp khun",
+        "cyrillic": "кхɔ̀ɔп кхун",
+        "meaning": "thank you",
+        "breakdown": "ขอบ-คุณ (khɔ̀ɔp-khun)"
+      },
+      {
+        "thai": "ไม่เป็นไร",
+        "latin": "mâi pen rai",
+        "cyrillic": "мâй пен рай",
+        "meaning": "no problem/you're welcome",
+        "breakdown": "ไม่-เป็น-ไร (mâi-pen-rai)"
+      }
+    ],
+    "tone_examples": [
+      {
+        "word": "มา",
+        "variations": [
+          {"form": "มา", "tone": "mid", "latin": "maa", "cyrillic": "маа", "meaning": "come"},
+          {"form": "หม่า", "tone": "low", "latin": "màa", "cyrillic": "мàа", "meaning": "-"},
+          {"form": "ม้า", "tone": "high", "latin": "máa", "cyrillic": "мáа", "meaning": "horse"},
+          {"form": "หมา", "tone": "rising", "latin": "mǎa", "cyrillic": "мǎа", "meaning": "dog"}
+        ]
+      }
+    ]
+  }
+} 
