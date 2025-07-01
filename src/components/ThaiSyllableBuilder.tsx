@@ -1,4 +1,4 @@
-import React, { useEffect, useState, DragEvent } from 'react';
+import React, { useEffect, useState, useCallback, DragEvent } from 'react';
 import { WordChip } from './WordChip';
 import { DropSlot } from './DropSlot';
 
@@ -112,16 +112,16 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
 
   }, [data, index]);
 
-  const onDragStart = (e: DragEvent<HTMLDivElement>, id: string) => {
+  const onDragStart = useCallback((e: DragEvent<HTMLDivElement>, id: string) => {
     e.dataTransfer.setData('text/plain', id);
     e.dataTransfer.effectAllowed = 'move';
-  };
+  }, []);
 
-  const findToken = (id: string): Token | undefined => {
+  const findToken = useCallback((id: string): Token | undefined => {
     return tokens.find(t => t.id === id) || slots.find(s => s?.id === id) || undefined;
-  };
+  }, [tokens, slots]);
 
-  const placeToken = (slotIdx: number, token: Token) => {
+  const placeToken = useCallback((slotIdx: number, token: Token) => {
     const expectedLetter = expected[slotIdx];
     if (!expectedLetter || token.text !== expectedLetter) {
       setError('Нельзя поместить сюда этот символ');
@@ -180,15 +180,15 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
         return n;
       });
     }
-  };
+  }, [expected, slots, tokens, data.vowel.position]);
 
-  const onDropWord = (slotIdx: number, id: string) => {
+  const onDropWord = useCallback((slotIdx: number, id: string) => {
     const tok = findToken(id);
     if (!tok) return;
     placeToken(slotIdx, tok);
-  };
+  }, [findToken, placeToken]);
 
-  const handleChipClick = (id: string) => {
+  const handleChipClick = useCallback((id: string) => {
     if (activeTokenId === id) {
       setActiveTokenId(null);
     } else {
@@ -198,9 +198,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
         if (tok) placeToken(activeSlot, tok);
       }
     }
-  };
+  }, [activeTokenId, activeSlot, findToken, placeToken]);
 
-  const handleSlotClick = (idx: number) => {
+  const handleSlotClick = useCallback((idx: number) => {
     if (activeSlot === idx) {
       setActiveSlot(null);
     } else {
@@ -210,9 +210,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
         if (tok) placeToken(idx, tok);
       }
     }
-  };
+  }, [activeSlot, activeTokenId, findToken, placeToken]);
 
-  const checkAnswer = () => {
+  const checkAnswer = useCallback(() => {
     const fb = expected.map((letter, idx) => {
       const tok = slots[idx];
       if (!letter) return tok === null;
@@ -223,9 +223,9 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
     if (correct) {
       setTimeout(onComplete, 800);
     }
-  };
+  }, [expected, slots, onComplete]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     const back = [...tokens];
     slots.forEach(s => {
       if (s) back.push(s);
@@ -239,7 +239,7 @@ export default function ThaiSyllableBuilder({ data, index, onComplete }: Props) 
     const v = Array(SLOT_COUNT).fill(false);
     v[SLOT_CENTER] = true;
     setVisible(v);
-  };
+  }, [tokens, slots]);
 
   return (
     <div className="space-y-4">

@@ -133,6 +133,7 @@ export default function VideoPlayer({ subtitles, src, originalLang }: VideoPlaye
     en: '',
     th: '',
     ru: '',
+    zh: '',
   };
   if (currentSeg) {
     words = currentSeg.words;

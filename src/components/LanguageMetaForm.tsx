@@ -1,4 +1,4 @@
-export type Language = 'ru' | 'en' | 'th';
+export type Language = 'ru' | 'en' | 'th' | 'zh';
 
 const LANG_OPTIONS = [
   { label: 'Русский', value: 'ru' },
