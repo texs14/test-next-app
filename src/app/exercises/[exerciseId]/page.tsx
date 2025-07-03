@@ -4,8 +4,10 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { exerciseService } from '@/lib/exerciseService'
 import SentenceExercise from '@/components/SentenceExercise'
+import InformationBlockDisplay from '@/components/InformationBlockDisplay'
 import { Fireworks } from '@/components/Fireworks'
-import type { Exercise } from '@/types/index.types'
+import type { Exercise, ModernExercise, ExerciseItem, InformationBlock } from '@/types/index.types'
+import { getExerciseItems } from '@/types/index.types'
 
 // Моковые данные для тестирования (пока Firebase не настроен)
 const mockExercises: { [key: string]: Exercise } = {
@@ -115,9 +117,57 @@ const mockExercises: { [key: string]: Exercise } = {
   }
 }
 
+// Тестовое упражнение с информационными блоками
+const mockModernExercise: ModernExercise = {
+  title: 'Тестовое смешанное упражнение',
+  description: 'Упражнение с информационными блоками и предложениями',
+  topic: 'Тестирование',
+  difficulty: 'easy',
+  items: [
+    {
+      id: 'info-1',
+      type: 'information',
+      order: 0,
+      data: {
+        title: 'Тоны в тайском языке',
+        content: 'В тайском языке есть 5 тонов:\n1. Средний тон (без обозначения)\n2. Низкий тон (`)\n3. Падающий тон (^)\n4. Высокий тон (´)\n5. Восходящий тон (~)\n\nТоны меняют значение слова!',
+        type: 'rule',
+        importance: 'high'
+      } as InformationBlock
+    },
+    {
+      id: 'sentence-1',
+      type: 'sentence',
+      order: 1,
+      data: {
+        text: 'สวัสดี',
+        rightAnswers: ['สวัสดี'],
+        translations: {
+          ru: 'Привет',
+          en: 'Hello'
+        },
+        note: {
+          ru: 'Транскрипция: sawàt dii'
+        }
+      }
+    },
+    {
+      id: 'info-2',
+      type: 'information',
+      order: 2,
+      data: {
+        title: 'Исключения в произношении',
+        content: 'Слово สวัสดี произносится как "sawàt dii", но пишется с разными буквами.\n\nЭто распространенное явление в тайском языке - написание и произношение могут отличаться.',
+        type: 'exception',
+        importance: 'medium'
+      } as InformationBlock
+    }
+  ]
+}
+
 export default function ExercisePage() {
   const { exerciseId } = useParams<any>()
-  const [exercise, setExercise] = useState<Exercise | null>(null)
+  const [exercise, setExercise] = useState<Exercise | ModernExercise | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showFireworks, setShowFireworks] = useState(false)
 
@@ -126,6 +176,12 @@ export default function ExercisePage() {
     
     const fetchExercise = async () => {
       try {
+        // Тестовое упражнение с информационными блоками
+        if (exerciseId === 'test-mixed') {
+          setExercise(mockModernExercise)
+          return
+        }
+
         // Получаем полные данные упражнения из коллекции exercises
         const exerciseData = await exerciseService.getExerciseById(exerciseId as string)
         if (exerciseData) {
@@ -150,7 +206,14 @@ export default function ExercisePage() {
     fetchExercise()
   }, [exerciseId])
 
-  const total = exercise?.sentences.length ?? 0
+  if (!exercise) {
+    return <p className="p-4">Загрузка...</p>
+  }
+
+  // Получаем элементы упражнения (работает с обоими форматами)
+  const exerciseItems = getExerciseItems(exercise)
+  const interactiveItems = exerciseItems.filter(item => item.type === 'sentence' || item.type === 'word')
+  const total = interactiveItems.length
 
   const handleComplete = () => {
     const newIndex = Math.min(currentIndex + 1, total)
@@ -163,10 +226,6 @@ export default function ExercisePage() {
         setShowFireworks(false)
       }, 3000)
     }
-  }
-
-  if (!exercise) {
-    return <p className="p-4">Загрузка...</p>
   }
 
   return (
@@ -183,44 +242,76 @@ export default function ExercisePage() {
             <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full capitalize">
               Уровень: {exercise.difficulty}
             </span>
-          </div>
-        </div>
-
-        {/* Прогресс-бар */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
-          <div className="flex justify-between items-center mb-3">
-            <span className="text-sm font-medium text-gray-700">Общий прогресс</span>
-            <span className="text-sm text-gray-500">
-              {Math.min(currentIndex + 1, total)} из {total}
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-green-400 to-blue-500 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${(currentIndex / total) * 100}%` }}
-            />
-          </div>
-          <div className="mt-2 text-center">
-            <span className="text-xs text-gray-600">
-              {Math.round((currentIndex / total) * 100)}% выполнено
+            <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
+              Элементов: {exerciseItems.length}
             </span>
           </div>
         </div>
 
-        {/* Упражнения */}
-        {exercise.sentences.map((sent, idx) => (
-          <SentenceExercise
-            key={idx}
-            sentence={sent}
-            index={idx}
-            isActive={idx <= currentIndex}
-            onComplete={handleComplete}
-          />
-        ))}
+        {/* Прогресс-бар (только для интерактивных элементов) */}
+        {total > 0 && (
+          <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
+            <div className="flex justify-between items-center mb-3">
+              <span className="text-sm font-medium text-gray-700">Прогресс выполнения</span>
+              <span className="text-sm text-gray-500">
+                {Math.min(currentIndex + 1, total)} из {total}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-green-400 to-blue-500 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${(currentIndex / total) * 100}%` }}
+              />
+            </div>
+            <div className="mt-2 text-center">
+              <span className="text-xs text-gray-600">
+                {Math.round((currentIndex / total) * 100)}% выполнено
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Отображение элементов упражнения */}
+        <div className="space-y-6">
+          {exerciseItems.map((item, idx) => {
+            if (item.type === 'information') {
+              return (
+                <InformationBlockDisplay
+                  key={item.id}
+                  informationBlock={item.data as InformationBlock}
+                  className="mb-6"
+                />
+              )
+            } else if (item.type === 'sentence') {
+              const sentenceIndex = interactiveItems.findIndex(i => i.id === item.id)
+              return (
+                <SentenceExercise
+                  key={item.id}
+                  sentence={item.data as any}
+                  index={sentenceIndex}
+                  isActive={sentenceIndex <= currentIndex}
+                  onComplete={handleComplete}
+                />
+              )
+            } else if (item.type === 'word') {
+              // TODO: Добавить поддержку WordSyllableBuilder
+              return (
+                <div key={item.id} className="bg-green-50 border border-green-200 rounded-2xl p-8">
+                  <div className="text-center">
+                    <div className="text-4xl mb-4">🔤</div>
+                    <h3 className="text-xl font-medium text-green-800 mb-2">Упражнение со словом</h3>
+                    <p className="text-green-600">Поддержка слов будет добавлена в следующей версии</p>
+                  </div>
+                </div>
+              )
+            }
+            return null
+          })}
+        </div>
 
         {/* Сообщение о завершении */}
-        {currentIndex >= total && (
-          <div className="bg-gradient-to-r from-green-100 to-blue-100 border border-green-200 rounded-2xl p-8 text-center shadow-lg">
+        {currentIndex >= total && total > 0 && (
+          <div className="bg-gradient-to-r from-green-100 to-blue-100 border border-green-200 rounded-2xl p-8 text-center shadow-lg mt-8">
             <div className="text-4xl mb-4">🎉</div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               Поздравляем!
@@ -231,10 +322,10 @@ export default function ExercisePage() {
           </div>
         )}
       </div>
-              <Fireworks 
-          isActive={showFireworks} 
-          onComplete={() => setShowFireworks(false)} 
-        />
+      <Fireworks 
+        isActive={showFireworks} 
+        onComplete={() => setShowFireworks(false)} 
+      />
     </div>
   )
 }

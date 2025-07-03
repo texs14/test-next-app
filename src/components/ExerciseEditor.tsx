@@ -5,10 +5,26 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { exerciseService } from '@/lib/exerciseService'
 import { auth } from '@/app/firebase'
-import type { Sentence, Exercise } from '@/types/index.types'
-import SentenceForm, { SentenceFormData } from './SentenceForm'
+import type { 
+  SentenceFormData, 
+  InformationBlockFormData, 
+  WordFormData,
+  ExerciseFormItem, 
+  Exercise, 
+  ModernExercise,
+  Sentence,
+  InformationBlock
+} from '@/types/index.types'
+import { ThaiSyllableData } from '@/components/ThaiSyllableBuilder'
+import { ThaiWordData } from '@/types/word.types'
+import AddExerciseItemDropdown from './AddExerciseItemDropdown'
+import SentenceForm from './SentenceForm'
+import InformationBlockForm from './InformationBlockForm'
+import DragDropBlock from './DragDropBlock'
+// import WordForm from './WordForm' // Будет создан позже
 
-const emptyForm = (): SentenceFormData => ({
+// Функции для создания пустых форм
+const emptySentenceForm = (): SentenceFormData => ({
   text: '',
   rightAnswers: '',
   translations: { ru: '', en: '', zh: '' },
@@ -16,30 +32,77 @@ const emptyForm = (): SentenceFormData => ({
   expanded: false,
 })
 
+const emptyInformationBlockForm = (): InformationBlockFormData => ({
+  title: '',
+  content: '',
+  type: 'explanation',
+  importance: 'medium',
+  expanded: true,
+})
+
+const emptyWordForm = (): WordFormData => ({
+  word: '',
+  syllables: [],
+  meaning: '',
+  difficulty: 'easy',
+  expanded: true,
+})
+
 export default function ExerciseEditor() {
   const params = useParams()
   const exerciseId = (params as { exerciseId?: string }).exerciseId
-  const [forms, setForms] = useState<SentenceFormData[]>([emptyForm()])
+  const [items, setItems] = useState<ExerciseFormItem[]>([])
   const [saving, setSaving] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [topic, setTopic] = useState('')
   const [difficulty, setDifficulty] = useState('')
 
-  const addForm = () => setForms(prev => [...prev, emptyForm()])
+  // Добавление нового элемента
+  const addSentence = () => {
+    const newItem: ExerciseFormItem = {
+      id: `sentence-${Date.now()}`,
+      type: 'sentence',
+      data: emptySentenceForm()
+    }
+    setItems(prev => [...prev, newItem])
+  }
 
-  const updateForm = (index: number, updater: (form: SentenceFormData) => SentenceFormData) => {
-    setForms(prev => {
+  const addWord = () => {
+    const newItem: ExerciseFormItem = {
+      id: `word-${Date.now()}`,
+      type: 'word',
+      data: emptyWordForm()
+    }
+    setItems(prev => [...prev, newItem])
+  }
+
+  const addInformation = () => {
+    const newItem: ExerciseFormItem = {
+      id: `information-${Date.now()}`,
+      type: 'information',
+      data: emptyInformationBlockForm()
+    }
+    setItems(prev => [...prev, newItem])
+  }
+
+  // Обновление элемента
+  const updateItem = (index: number, updater: (item: ExerciseFormItem) => ExerciseFormItem) => {
+    setItems(prev => {
       const updated = [...prev]
       updated[index] = updater(updated[index])
       return updated
     })
   }
 
-  const removeForm = (index: number) => setForms(prev => prev.filter((_, i) => i !== index))
+  // Удаление элемента
+  const removeItem = (index: number) => {
+    setItems(prev => prev.filter((_, i) => i !== index))
+  }
 
-  const moveForm = (dragIndex: number, dropIndex: number) => {
-    setForms(prev => {
+  // Перемещение элемента
+  const moveItem = (dragIndex: number, dropIndex: number) => {
+    setItems(prev => {
       const arr = [...prev]
       const [draggedItem] = arr.splice(dragIndex, 1)
       arr.splice(dropIndex, 0, draggedItem)
@@ -47,6 +110,29 @@ export default function ExerciseEditor() {
     })
   }
 
+  // Функции для обновления конкретных типов форм
+  const updateSentenceForm = (index: number, updater: (form: SentenceFormData) => SentenceFormData) => {
+    updateItem(index, item => ({
+      ...item,
+      data: updater(item.data as SentenceFormData)
+    }))
+  }
+
+  const updateInformationForm = (index: number, updater: (form: InformationBlockFormData) => InformationBlockFormData) => {
+    updateItem(index, item => ({
+      ...item,
+      data: updater(item.data as InformationBlockFormData)
+    }))
+  }
+
+  const updateWordForm = (index: number, updater: (form: WordFormData) => WordFormData) => {
+    updateItem(index, item => ({
+      ...item,
+      data: updater(item.data as WordFormData)
+    }))
+  }
+
+  // Загрузка упражнения
   useEffect(() => {
     if (!exerciseId) return
     const load = async () => {
@@ -57,19 +143,25 @@ export default function ExerciseEditor() {
           setDescription(data.description)
           setTopic(data.topic)
           setDifficulty(data.difficulty)
-          setForms(
-            data.sentences.map(s => ({
-              text: s.text,
-              rightAnswers: s.rightAnswers.join('\n'),
+          
+          // Конвертируем старый формат в новый (только предложения)
+          const sentenceItems: ExerciseFormItem[] = data.sentences.map((sentence, index) => ({
+            id: `sentence-${index}`,
+            type: 'sentence',
+            data: {
+              text: sentence.text,
+              rightAnswers: sentence.rightAnswers.join('\n'),
               translations: { 
-                ru: s.translations.ru || '', 
-                en: s.translations.en || '',
-                zh: s.translations.zh || ''
+                ru: sentence.translations.ru || '', 
+                en: sentence.translations.en || '',
+                zh: sentence.translations.zh || ''
               },
-              notes: { ru: s.note?.ru || '', en: s.note?.en || '' },
+              notes: { ru: sentence.note?.ru || '', en: sentence.note?.en || '' },
               expanded: false,
-            }))
-          )
+            } as SentenceFormData
+          }))
+          
+          setItems(sentenceItems)
         }
       } catch (error) {
         console.error('Ошибка загрузки упражнения:', error)
@@ -78,42 +170,51 @@ export default function ExerciseEditor() {
     load()
   }, [exerciseId])
 
+  // Сохранение упражнения
   const handleSave = async () => {
-    const payload: Sentence[] = forms.map(f => ({
-      text: f.text,
-      rightAnswers: f.rightAnswers
-        .split('\n')
-        .map(a => a.trim())
-        .filter(Boolean),
-      translations: { 
-        ru: f.translations.ru,
-        en: f.translations.en,
-        zh: f.translations.zh
-      },
-      note:
-        f.notes.ru?.trim() || f.notes.en?.trim()
-          ? {
-              ru: f.notes.ru?.trim() || undefined,
-              en: f.notes.en?.trim() || undefined,
-            }
-          : null,
-    }))
-
     setSaving(true)
     try {
+      // Конвертируем формы в данные для сохранения
+      const sentences: Sentence[] = items
+        .filter(item => item.type === 'sentence')
+        .map(item => {
+          const data = item.data as SentenceFormData
+          return {
+            text: data.text,
+            rightAnswers: data.rightAnswers
+              .split('\n')
+              .map(a => a.trim())
+              .filter(Boolean),
+            translations: { 
+              ru: data.translations.ru,
+              en: data.translations.en,
+              zh: data.translations.zh
+            },
+            note:
+              data.notes.ru?.trim() || data.notes.en?.trim()
+                ? {
+                    ru: data.notes.ru?.trim() || undefined,
+                    en: data.notes.en?.trim() || undefined,
+                  }
+                : null,
+          }
+        })
+
+      // Пока сохраняем только в старом формате (только предложения)
+      // TODO: В будущем добавить поддержку ModernExercise формата
       const exercise: Exercise = {
         title,
         description,
         topic,
         difficulty,
-        sentences: payload,
+        sentences,
       }
 
       if (exerciseId) {
         await exerciseService.updateExercise(exerciseId, exercise)
       } else {
         await exerciseService.createExercise(exercise)
-        setForms([emptyForm()])
+        setItems([])
         setTitle('')
         setDescription('')
         setTopic('')
@@ -181,30 +282,67 @@ export default function ExerciseEditor() {
           </div>
         </div>
         
-        {/* Список предложений */}
+        {/* Список элементов упражнения */}
         <div className="space-y-4">
-          {forms.map((form, idx) => (
-            <SentenceForm
-              key={idx}
-              form={form}
-              index={idx}
-              onUpdate={updateForm}
-              onRemove={removeForm}
-              onMove={moveForm}
-              canMoveUp={idx > 0}
-              canMoveDown={idx < forms.length - 1}
-            />
-          ))}
+          {items.map((item, idx) => {
+            if (item.type === 'sentence') {
+              return (
+                <DragDropBlock
+                  key={item.id}
+                  type="sentence"
+                  index={idx}
+                  onMove={moveItem}
+                >
+                  <SentenceForm
+                    form={item.data as SentenceFormData}
+                    index={idx}
+                    onUpdate={updateSentenceForm}
+                    onRemove={removeItem}
+                  />
+                </DragDropBlock>
+              )
+            } else if (item.type === 'information') {
+              return (
+                <DragDropBlock
+                  key={item.id}
+                  type="information"
+                  index={idx}
+                  onMove={moveItem}
+                >
+                  <InformationBlockForm
+                    form={item.data as InformationBlockFormData}
+                    index={idx}
+                    onUpdate={updateInformationForm}
+                    onRemove={removeItem}
+                  />
+                </DragDropBlock>
+              )
+            } else if (item.type === 'word') {
+              // TODO: Добавить WordForm когда будет готов
+              return (
+                <DragDropBlock
+                  key={item.id}
+                  type="word"
+                  index={idx}
+                  onMove={moveItem}
+                >
+                  <div className="p-4 text-green-700">
+                    📝 Форма для слов (в разработке)
+                  </div>
+                </DragDropBlock>
+              )
+            }
+            return null
+          })}
         </div>
         
         {/* Кнопки действий */}
         <div className="flex gap-4">
-          <button 
-            onClick={addForm} 
-            className="px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-          >
-            + Добавить предложение
-          </button>
+          <AddExerciseItemDropdown
+            onAddSentence={addSentence}
+            onAddWord={addWord}
+            onAddInformation={addInformation}
+          />
           <button
             onClick={handleSave}
             disabled={saving}
